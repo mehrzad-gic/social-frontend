@@ -10,13 +10,17 @@ import Loading from "../Ui/Loading";
 
 // Create Post Component
 const Create = ({ isLoading }) => {
+
     const [tags, setTags] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
+
         const fetchTags = async () => {
+        
             const token = JSON.parse(localStorage.getItem("user"))?.value?.jwt;
+        
             if (token) {
                 try {
                     const res = await all(token);
