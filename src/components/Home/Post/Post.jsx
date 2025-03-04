@@ -3,7 +3,8 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { toast } from "react-toastify";
 import { addPostComment, postComments, savePost } from "../../../Controllers/PostController";
 import Comment from "../Comment/Comment";
-import AppContext from "../../../Context/AppContext";
+import LikesContext from "../../../Context/LikesContext";
+import SavesContext from "../../../Context/SavesContext";
 import { BACKEND_ROUTE } from "../../../Controllers/Config";
 import { likeComment } from "../../../Controllers/CommentController";
 import AnswerText from "../Comment/AnswerText";
@@ -12,12 +13,17 @@ import "slick-carousel/slick/slick.css"; // Import Slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import Slick Theme CSS
 
 const Post = ({ value, like, setPosts }) => {
+
   const [rep, setRep] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [currentPost, setCurrentPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentPage, setCommentPage] = useState(0);
-  const { postLikes, loading, setLoading, commentLikes, setCommentLikes, postSaves, setPostSaves } = useContext(AppContext);
+
+  const [loading, setLoading] = useState(false);
+  const {postSaves,setPostSaves } = useContext(SavesContext);
+  const {postLikes,commentLikes,setCommentLikes } = useContext(LikesContext);
+
   const [visibleReplies, setVisibleReplies] = useState({});
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
@@ -33,6 +39,7 @@ const Post = ({ value, like, setPosts }) => {
   }, [value]);
 
   const loadComments = () => {
+
     const token = JSON.parse(localStorage.getItem("user")).value.jwt;
     setLoading(true);
 
@@ -47,6 +54,7 @@ const Post = ({ value, like, setPosts }) => {
     }).finally(() => {
       setLoading(false);
     });
+    
   };
 
   const addComment = async (e) => {

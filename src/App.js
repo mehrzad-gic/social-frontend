@@ -1,7 +1,7 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomeLayout from "./components/Layouts/HomeLayout";
+import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
+import HomeLayout, { homeLayoutLoader } from "./components/Layouts/HomeLayout";
 import Index from "./components/Home/Index";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ForgotPassword from "./components/Home/Auth/ForgotPassword";
 import Login from "./components/Home/Auth/Login";
@@ -12,14 +12,24 @@ import { LikesProvider } from "./Context/LikesContext";
 import { SavesProvider } from "./Context/SavesContext";
 import DashboardLayout from "./components/Layouts/DashboardLayout";
 import Info from "./components/Dashboard/Pages/Info";
+import { login } from "./Helpers/Helpers";
+import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
 
+const checkAuth = async () => {
+  const auth = await login();
+  if (auth) {
+    toast.info("You are already logged in.");
+    return redirect("/");
+  }
+  return null;
+};
 
 function App() {
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: <HomeLayout />,
+      loader: homeLayoutLoader,
       children: [
         { path: "/", element: <Index /> },
         { path: "/create-post", element: <Create /> },
@@ -39,14 +49,12 @@ function App() {
       ],
     },
     { path: "/forgot-password", element: <ForgotPassword /> },
-    { path: "/Login", element: <Login /> },
-    { path: "/Register", element: <Register /> },
+    { path: "/Login", element: <Login />, loader: checkAuth },
+    { path: "/Register", element: <Register />, loader: checkAuth },
   ]);
 
   return (
-
     <>
-
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -59,17 +67,14 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-
+      <ThemeSwitcher />
       <LikesProvider>
         <SavesProvider>
           <RouterProvider router={router} />
         </SavesProvider>
       </LikesProvider>
-
     </>
-
   );
-
 }
 
 export default App;

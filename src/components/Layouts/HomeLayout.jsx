@@ -1,46 +1,36 @@
-import { Outlet, useNavigate } from "react-router-dom";  
+import { Outlet, useNavigate, useLoaderData, redirect } from "react-router-dom";  
 import Header from "../Home/Ui/Header";  
 import ChatBox from "../Home/Ui/ChatBox";  
 import '../../assets/home/css/style.css';  
-import React, { useEffect, useState } from "react";  
+import React from "react";  
 import { toast } from 'react-toastify';  
 import { login } from "../../Helpers/Helpers";  
 import Loading from "../Home/Ui/Loading";
 
-// HomeLayout Component  
+
+// Loader function to check login status
+export const homeLayoutLoader = async () => {
+    const isLoggedIn = await login();
+    if (!isLoggedIn) {
+        toast.error('You are not authorized to view this page.');
+        return redirect("/login");
+    }
+    return { isLoggedIn };
+};
+
 const HomeLayout = () => {  
-    
-    const navigate = useNavigate();  
-    const [isLoading, setIsLoading] = useState(true);  
 
-    useEffect(() => {  
-        const checkLogin = async () => {  
-            const isLoggedIn = await login(); // Wait for the login function to complete  
+    const { isLoggedIn } = useLoaderData();
 
-            if (isLoggedIn === false) {  
-                toast.error('You are not authorized to view this page.');   
-                
-                setTimeout(() => {  
-                    navigate("/login");  
-                }, 2000);  
-            } else {  
-                setIsLoading(false); // User is logged in, stop loading  
-            }  
-        };  
-
-        checkLogin();
-    }, [navigate]);  
-
-    // Show a loading indicator while checking login status
-    if (isLoading) {
-        return <Loading/>; // You can replace this with a spinner or loading component
+    if (!isLoggedIn) {
+        return <Loading/>;
     }
 
     return (  
         <>  
             <Header />  
             <ChatBox />  
-            <Outlet context={{ isLoading }} /> {/* Pass isLoading to Outlet context */}
+            <Outlet context={{ isLoggedIn }} /> {/* Pass isLoggedIn to Outlet context */}
         </>  
     );  
 }  
