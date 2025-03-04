@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';  
 
 const ThemeSwitcher = () => {  
+    
     const storedTheme = localStorage.getItem('theme');  
 
     const getPreferredTheme = () => {  

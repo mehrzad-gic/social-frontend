@@ -8,6 +8,7 @@ import { success_register, user_exists } from "../../../Helpers/Messages";
 
 // Register Component
 const Register = () => {
+
     const input = useRef(null);
     const icon = useRef(null);
     const [errors, setErrors] = useState(null);
@@ -21,6 +22,7 @@ const Register = () => {
     const [passwordType, setPasswordType] = useState('password');
 
     useEffect(() => {
+        
         const checkLogin = async () => {
             try {
                 const auth = await login(); // Ensure this function is defined and working
@@ -34,6 +36,7 @@ const Register = () => {
         };
 
         checkLogin();
+
     }, [navigate]);
 
     const passwordHidden = () => {
@@ -56,20 +59,17 @@ const Register = () => {
     };
 
     const submitForm = async (e) => {
+
         e.preventDefault();
 
         try {
+
             await registerSchema.validate(form, { abortEarly: false });
+            
             const res = await register(form); // Await the register call
 
-            if (!res.success) {
-                setErrors(res.errors);
-            } else {
-                const remember = document.getElementById("rememberCheck");
-                setLocalStorage("user", res.data, remember.checked ? 21 : 7);
-                navigate('../');
-                toast.info(success_register);
-            }
+            console.log(res);
+            
         } catch (error) {
             if (error.inner) {
                 setErrors(error.inner);

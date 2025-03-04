@@ -18,17 +18,22 @@ const Login = () => {
     const navigate = useNavigate();  
 
     useEffect(() => {  
+        
         const checkLogin = async () => {  
+        
             const isLoggedIn = await login(); // Assume this checks if the user is logged in  
+        
             setLoading(false);  
             
             if (isLoggedIn) {  
                 navigate("../");  
                 toast.info("You are already logged in.");  
             }  
+        
         };  
 
         checkLogin();  
+
     }, [navigate]);  
 
     const passwordHidden = () => {  
@@ -43,13 +48,18 @@ const Login = () => {
     };  
 
     const submitForm = async (e) => {  
+
         e.preventDefault();  
 
         try {  
+        
             await loginSchema.validate(form, { abortEarly: false });  
+            console.log(form);
 
             const res = await loginUser(form);  
 
+            console.log(res);
+            
             if (res.res === 'error') {  
                 toast.error(invalid_login);  
             } else {                  
@@ -57,12 +67,15 @@ const Login = () => {
                 navigate('../');  
                 toast.success(success_login);  
             }  
+        
         } catch (error) {  
+        
             if (error.inner) {  
                 setErrors(error.inner);  
             } else {  
                 setErrors(error.message);  
             }  
+        
         }  
 
         setTimeout(() => {  

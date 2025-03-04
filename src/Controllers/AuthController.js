@@ -11,7 +11,7 @@ export const register = (params) => {
         body: JSON.stringify(params)
     })
     .then((response) => response.json())
-    .catch((err) => err);
+    .catch((err) => err); 
 
 };
  
