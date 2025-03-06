@@ -12,7 +12,7 @@ const Sidebar = () => {
 
         const storage = JSON.parse(localStorage.getItem('user'));
         
-        setUser(storage.value.user)
+        setUser(storage.user)
 
     }, []); 
 

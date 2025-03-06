@@ -6,11 +6,14 @@ import { toast } from 'react-toastify';
 import { success_register } from "../../../Helpers/Messages";
 import Loading from "../Ui/Loading"; // Import the Loading component
 import { login } from "../../../Helpers/Helpers";
+import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
 
 // Register Component
 const Register = () => {
+
     const input = useRef(null);
     const icon = useRef(null);
+    
     const [errors, setErrors] = useState(null);
     const [form, setForm] = useState({
         name: '',
@@ -18,6 +21,7 @@ const Register = () => {
         password: '',
         password_confirmation: ''
     });
+
     const navigate = useNavigate();
     const [passwordType, setPasswordType] = useState('password');
     const [loading, setLoading] = useState(false); // Add loading state
@@ -80,26 +84,7 @@ const Register = () => {
                 <div className="container">
                     <div className="row justify-content-center align-items-center vh-100 py-5">
                         <div className="col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
-                            {Array.isArray(errors) ? (
-                                errors.map((err, index) => (
-                                    <div key={index} className="alert alert-danger">
-                                        <i className="bi bi-exclamation-circle me-2"></i>
-                                        {err.message}
-                                    </div>
-                                ))
-                            ) : typeof errors === "string" ? (
-                                <div className="alert alert-danger">
-                                    <i className="bi bi-exclamation-circle me-2"></i>
-                                    {errors}
-                                </div>
-                            ) : typeof errors === 'object' && errors !== null ? (
-                                Object.keys(errors).map((key, index) => (
-                                    <div key={index} className="alert alert-danger">
-                                        <i className="bi bi-exclamation-circle me-2"></i>
-                                        {errors[key]}
-                                    </div>
-                                ))
-                            ) : null}
+                            <ErrorMessages errors={errors} /> {/* Use the ErrorMessages component */}
                             <div className="card card-body text-center p-4 p-sm-5">
                                 <h1 className="mb-2">Register</h1>
                                 <p className="mb-0">

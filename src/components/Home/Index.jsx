@@ -22,7 +22,7 @@ const Index = () => {
 
   useEffect(() => {
     
-    const token = JSON.parse(localStorage.getItem("user")).value.jwt;
+    const token = JSON.parse(localStorage.getItem("user")).jwt;
 
     const fetchPosts = async () => {
       setLoading(true);
@@ -52,7 +52,7 @@ const Index = () => {
 
   const like = async (id) => {
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("user")).value.jwt;
+    const token = JSON.parse(localStorage.getItem("user")).jwt;
     try {
       const result = await likePost(id, token);
       if (result.success) {

@@ -4,13 +4,14 @@ import { verifyUser,genToken } from "../Controllers/AuthController";
 import { BACKEND_URL } from "../Controllers/Config";
 
 
-export const setLocalStorage = (key,value,expirationInDays) => {
+export const setLocalStorage = (key,value,expirationInDays,user) => {
 
     const now = new Date();
 
     const item = {
-      value: value,
-      expiration: now.getTime() + expirationInDays * 24 * 60 * 60 * 1000,
+        jwt: value,
+        user : user,
+        expiration: now.getTime() + expirationInDays * 24 * 60 * 60 * 1000,
     };
 
     localStorage.setItem(key, JSON.stringify(item));  
@@ -95,9 +96,9 @@ export const getFile = async (name) => {
 export const login = async () => {  
 
     const user = getLocalStorage('user');  
-    const storage = JSON.parse(user);  
+    const storage = JSON.parse(user);      
 
-    if (storage?.value) {
+    if (storage?.jwt) {
 
         // Validate the entire user string, not just user.value  
         if (isValidJSON(user)) {  
@@ -112,44 +113,26 @@ export const login = async () => {
             }  
 
             let final = false;  
-            const res = await verifyUser(storage.value.jwt);  
-            
+            const res = await verifyUser(storage.jwt);  
+            console.log(res);
             
             if (res.success === true) {     
-
+        
                 final = true;  
 
-                let newStorage = storage;
+                if(res.data !== null) { 
 
-                newStorage.value.user = res.user;
-
-                console.log(`token => ${res.user}`)
-
-                localStorage.setItem('user',JSON.stringify(newStorage))  
-                
-                console.log(newStorage);
-                
-                
-            } else if (res.error === 'Token has expired') {  
-                // Request a new token  
-                const newTokenResponse = await genToken({ token: storage.value.jwt, user: storage.value.user });  
-                
-                if (newTokenResponse.success && newTokenResponse.message === 'Token Refreshed Successfully') {  
-                                      
                     const now = new Date();
                     const item = {
-                      value: newTokenResponse.data,
+                      jwt: res.data.token,
+                      user: res.data.user,
                       expiration: now.getTime() + 21 * 24 * 60 * 60 * 1000,
                     };
+            
                     localStorage.setItem('user', JSON.stringify(item));
 
-                    final = true;  
-
-                } else if (newTokenResponse.message === 'Token is still valid') {  
-                    final = true;  
-                } else {  
-                    final = false;  
-                }  
+                }
+            
             }  
 
             return final; // Return the final status  

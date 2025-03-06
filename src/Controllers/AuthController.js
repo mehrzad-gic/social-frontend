@@ -3,7 +3,7 @@ import { BACKEND_URL } from './Config';
 // Register User
 export const register = (params) => {
 
-    return fetch(`${BACKEND_URL}/register`, {
+    return fetch(`${BACKEND_URL}/auth/register`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -18,7 +18,7 @@ export const register = (params) => {
 // Login the user
 export const loginUser = (params) => {
 
-    return fetch(`${BACKEND_URL}/login`, {
+    return fetch(`${BACKEND_URL}/auth/login`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -40,7 +40,7 @@ export const logout = () => {
 
 export const genToken = (token) => {
 
-    return fetch(`${BACKEND_URL}/generate-token`, {
+    return fetch(`${BACKEND_URL}/auth/generate-token`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const genToken = (token) => {
 
 export const verifyUser = (token) => {
 
-    return fetch(`${BACKEND_URL}/verify-token`, {
+    return fetch(`${BACKEND_URL}/auth/verify-token`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
