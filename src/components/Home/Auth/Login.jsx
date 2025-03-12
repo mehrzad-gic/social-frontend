@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../../../Controllers/AuthController";
 import { loginSchema } from "../../../validations/AuthValidation";
-import { login, setLocalStorage } from "../../../Helpers/Helpers";
+import { setLocalStorage } from "../../../Helpers/Helpers";
 import { toast } from 'react-toastify';
 import { invalid_login, success_login } from "../../../Helpers/Messages";
 import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
@@ -12,22 +12,10 @@ const Login = () => {
 
     const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [passwordType, setPasswordType] = useState('password');
     const icon = useRef(null);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const checkLogin = async () => {
-            const isLoggedIn = await login(); // Assume this checks if the user is logged in
-            setLoading(false);
-            if (isLoggedIn) {
-                navigate("../");
-                toast.info("You are already logged in.");
-            }
-        };
-        checkLogin();
-    }, [navigate]);
 
     const passwordHidden = () => {
         setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
@@ -56,7 +44,7 @@ const Login = () => {
                 setErrors(res.errors);
             } else {
                 setLocalStorage("user", res.data.token, 21,res.data.user);
-                // navigate('../');
+                navigate('../');
                 toast.success(success_login);
             }
         } catch (error) {

@@ -3,10 +3,9 @@ import { BACKEND_URL } from './Config';
 // Create Post
 export const createPost = async (params,token) => {
 
-    return fetch(`${BACKEND_URL}/post-create`, {
+    return fetch(`${BACKEND_URL}/posts/create`, {
         method: "POST",
         headers: {
-            // 'Content-Type': 'multipart/form-data',
             'Authorization' : `Bearer ${token}`
         },
         body: params,
@@ -71,7 +70,7 @@ export const savePost = async (id, token) => {
     }  
 
 };  
-
+ 
 
 export const all = (token,page = 1) => {
 

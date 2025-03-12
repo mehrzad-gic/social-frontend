@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
-import HomeLayout, { homeLayoutLoader } from "./components/Layouts/HomeLayout";
+import HomeLayout, {  } from "./components/Layouts/HomeLayout";
 import Index from "./components/Home/Index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,7 +29,6 @@ function App() {
     {
       path: "/",
       element: <HomeLayout />,
-      loader: homeLayoutLoader,
       children: [
         { path: "/", element: <Index /> },
         { path: "/create-post", element: <Create /> },

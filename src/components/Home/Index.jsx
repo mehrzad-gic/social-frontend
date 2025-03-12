@@ -8,6 +8,7 @@ import SavesContext from "../../Context/SavesContext";
 import Loading from "./Ui/Loading";
 import { toast } from "react-toastify";
 import Post from "./Post/Post";
+import { setLocalStorage } from "../../Helpers/Helpers";
 
 // Index Component
 const Index = () => {
@@ -25,26 +26,39 @@ const Index = () => {
     const token = JSON.parse(localStorage.getItem("user")).jwt;
 
     const fetchPosts = async () => {
+
       setLoading(true);
+      
       try {
+  
         const res = await all(token, page);
+  
+        console.log(res);
+        
         if (res.success) {
-          setPosts((prevPosts) => [...prevPosts, ...res.data.posts]);
-          setPostLikes(res.data.post_likes);
-          setPostSaves(res.data.saved_posts);
+  
+          setPosts((prevPosts) => [...prevPosts, ...res.posts]);
+          setPostLikes(res.post_likes);
+          setPostSaves(res.saved_posts);
+          
+          if(res.token && res.token != res) setLocalStorage("user", res.token, 21,res.user);
+
         } else {
           toast.error("Server Error");
         }
+      
       } catch (err) {
         console.error(err);
         toast.error("An error occurred while fetching posts.");
       } finally {
         setLoading(false);
       }
+    
     };
 
     fetchPosts();
-  }, [page, setPostLikes, setPostSaves]);
+  
+  }, [page]);
 
   const loadMore = () => {
     setPage((prevPage) => prevPage + 1);

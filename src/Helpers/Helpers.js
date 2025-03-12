@@ -114,25 +114,24 @@ export const login = async () => {
 
             let final = false;  
             const res = await verifyUser(storage.jwt);  
-            console.log(res);
             
             if (res.success === true) {     
         
                 final = true;  
 
-                if(res.data !== null) { 
+                if(res.data !== null && res.data.token){
 
                     const now = new Date();
+
                     const item = {
-                      jwt: res.data.token,
-                      user: res.data.user,
-                      expiration: now.getTime() + 21 * 24 * 60 * 60 * 1000,
+                        jwt: res.data.token,
+                        user: res.data.user,
+                        expiration: now.getTime() + 21 * 24 * 60 * 60 * 1000,
                     };
             
                     localStorage.setItem('user', JSON.stringify(item));
-
                 }
-            
+      
             }  
 
             return final; // Return the final status  
