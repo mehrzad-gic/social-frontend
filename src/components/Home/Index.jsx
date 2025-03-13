@@ -38,8 +38,8 @@ const Index = () => {
         if (res.success) {
   
           setPosts((prevPosts) => [...prevPosts, ...res.posts]);
-          setPostLikes(res.post_likes);
-          setPostSaves(res.saved_posts);
+          setPostLikes(res.likedPosts);
+          setPostSaves(res.savedPosts);
           
           if(res.token && res.token != res) setLocalStorage("user", res.token, 21,res.user);
 

@@ -8,7 +8,7 @@ export const createPost = async (params,token) => {
         headers: {
             'Authorization' : `Bearer ${token}`
         },
-        body: params,
+        body: params, 
     })
     .then((response) => response.json())
     .catch((err) => err);

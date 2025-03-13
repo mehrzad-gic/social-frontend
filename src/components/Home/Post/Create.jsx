@@ -14,6 +14,7 @@ const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
 // Create Post Component
 const Create = ({ isLoading }) => {
+
     const [tags, setTags] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,7 +70,7 @@ const Create = ({ isLoading }) => {
                 toast.error("Only JPEG, PNG, and GIF files are allowed.");
                 setIsSubmitting(false);
                 return;
-            }
+            } 
 
             // Prepare form data
             const storage = JSON.parse(getLocalStorage("user"));

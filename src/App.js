@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
-import HomeLayout, {  } from "./components/Layouts/HomeLayout";
+import HomeLayout, { loader } from "./components/Layouts/HomeLayout";
 import Index from "./components/Home/Index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,6 +14,7 @@ import DashboardLayout from "./components/Layouts/DashboardLayout";
 import Info from "./components/Dashboard/Pages/Info";
 import { login } from "./Helpers/Helpers";
 import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
+import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
 
 const checkAuth = async () => {
   const auth = await login();
@@ -24,11 +25,22 @@ const checkAuth = async () => {
   return null;
 };
 
+
+const queryClient = new QueryClient({
+    defaultOptions:{
+      queries:{
+        staleTime:60 * 2 * 1000,
+      }
+    }
+});
+
 function App() {
+
   const router = createBrowserRouter([
     {
       path: "/",
       element: <HomeLayout />,
+      loader: loader,
       children: [
         { path: "/", element: <Index /> },
         { path: "/create-post", element: <Create /> },
@@ -67,11 +79,13 @@ function App() {
         theme="colored"
       />
       <ThemeSwitcher />
-      <LikesProvider>
-        <SavesProvider>
-          <RouterProvider router={router} />
-        </SavesProvider>
-      </LikesProvider>
+      <QueryClientProvider client={queryClient}>
+        <LikesProvider>
+          <SavesProvider>
+            <RouterProvider router={router} />
+          </SavesProvider>
+        </LikesProvider>
+      </QueryClientProvider>
     </>
   );
 }

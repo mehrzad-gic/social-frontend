@@ -22,7 +22,7 @@ const Post = ({ value, like, setPosts }) => {
 
   const [loading, setLoading] = useState(false);
   const {postSaves,setPostSaves } = useContext(SavesContext);
-  const {postLikes,commentLikes,setCommentLikes } = useContext(LikesContext);
+  const {postLikes,commentLikes,setCommentLikes,setPostLikes } = useContext(LikesContext);
 
   const [visibleReplies, setVisibleReplies] = useState({});
   const commentForm = useRef(null);
@@ -35,12 +35,14 @@ const Post = ({ value, like, setPosts }) => {
   useEffect(() => {
     if (value && value.id) {
       setCurrentPost(value.id);
+      console.log(value);
+      
     }
   }, [value]);
 
   const loadComments = () => {
 
-    const token = JSON.parse(localStorage.getItem("user")).value.jwt;
+    const token = JSON.parse(localStorage.getItem("user")).jwt;
     setLoading(true);
 
     postComments(token, currentPost, commentPage + 1).then((res) => {
@@ -123,7 +125,7 @@ const Post = ({ value, like, setPosts }) => {
   const save = async () => {
     setLoading(true);
     const postId = value.id;
-    const token = JSON.parse(localStorage.getItem("user")).value.jwt;
+    const token = JSON.parse(localStorage.getItem("user")).jwt;
 
     try {
       const result = await savePost(postId, token);
@@ -171,7 +173,7 @@ const Post = ({ value, like, setPosts }) => {
               <Link to="#!">
                 <img
                   className="avatar-img rounded-circle"
-                  src={value.user.img ? `${BACKEND_ROUTE}/${value.user.img}` : "assets/images/avatar/placeholder.jpg"}
+                  src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
                   alt=""
                 />
               </Link>
@@ -180,11 +182,11 @@ const Post = ({ value, like, setPosts }) => {
             <div>
               <div className="nav nav-divider">
                 <h6 className="nav-item card-title mb-0">
-                  <Link to="#!">{value.user.name}</Link>
+                  <Link to="#!">{value.User.name}</Link>
                 </h6>
                 <span className="nav-item small">{value.updated_at}</span>
               </div>
-              <p className="mb-0 small">{value.user.title}</p>
+              <p className="mb-0 small">{value.User.title}</p>
             </div>
           </div>
           {/* Card feed action dropdown */}
@@ -201,7 +203,7 @@ const Post = ({ value, like, setPosts }) => {
             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
               <li>
                 <Link className="dropdown-item" to="#" onClick={save}>
-                  {postSaves.includes(value.id) ? (
+                  {postSaves && postSaves.includes(value.id) ? (
                     <>
                       <i className="bi bi-bookmark-fill fa-fw pe-2"></i>
                       Unsave post
@@ -231,7 +233,7 @@ const Post = ({ value, like, setPosts }) => {
               <div key={index}>
                 <img
                   className="card-img"
-                  src={`${BACKEND_ROUTE}/storage/${image}`}
+                  src={image.url}
                   alt={`Post image ${index}`}
                 />
               </div>
@@ -240,7 +242,7 @@ const Post = ({ value, like, setPosts }) => {
         ) : value.img ? (
           <img
             className="card-img"
-            src={`${BACKEND_ROUTE}/storage/${value.img}`} // Ensure value.img has a 'url' property
+            src={JSON.parse(value.img).url} // Ensure value.img has a 'url' property
             alt="Post"
           />
         ) : (
@@ -295,7 +297,7 @@ const Post = ({ value, like, setPosts }) => {
             <Link to="#!">
               <img
                 className="avatar-img rounded-circle"
-                src={value.user.img ? `${BACKEND_ROUTE}/${value.user.img}` : "assets/images/avatar/placeholder.jpg"}
+                src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
                 alt=""
               />
             </Link>

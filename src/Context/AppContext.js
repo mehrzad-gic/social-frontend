@@ -9,6 +9,8 @@ const AppContext = createContext({
     setCommentLikes : () => {},
     postSaves : null,
     setPostSaves : () => {},
+    error:null,
+    setError : () => {}
 });
 
 export default AppContext;

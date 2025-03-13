@@ -6,6 +6,7 @@ export const LikesProvider = ({ children }) => {
 
   const [postLikes, setPostLikes] = useState([]);
   const [commentLikes, setCommentLikes] = useState([]);
+  const [error, setError] = useState([]);
 
   const memoizedSetPostLikes = useCallback((value) => setPostLikes(value), []);
   const memoizedSetCommentLikes = useCallback((value) => setCommentLikes(value), []);
@@ -15,6 +16,8 @@ export const LikesProvider = ({ children }) => {
     setPostLikes: memoizedSetPostLikes,
     commentLikes,
     setCommentLikes: memoizedSetCommentLikes,
+    error:null,
+    setError : () => {}
   }), [postLikes, commentLikes, memoizedSetPostLikes, memoizedSetCommentLikes]);
 
   return (
