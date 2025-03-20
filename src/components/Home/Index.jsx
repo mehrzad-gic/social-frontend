@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Sidebar from "./Ui/Sidebar";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useRef, useContext } from "react";
 import { all, likePost } from "../../Controllers/PostController";
 import ShareFeed from "./Ui/ShareFeed";
 import LikesContext from "../../Context/LikesContext";
@@ -9,87 +9,99 @@ import Loading from "./Ui/Loading";
 import { toast } from "react-toastify";
 import Post from "./Post/Post";
 import { setLocalStorage } from "../../Helpers/Helpers";
+import { useQueryClient, useMutation, useInfiniteQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { server_auth_errors } from "../../Helpers/Messages";
+
 
 // Index Component
 const Index = () => {
 
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const showMoreButton = useRef(null);
-
   const { setPostLikes } = useContext(LikesContext);
   const { setPostSaves } = useContext(SavesContext);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    
-    const token = JSON.parse(localStorage.getItem("user")).jwt;
-
-    const fetchPosts = async () => {
-
-      setLoading(true);
+  // Fetch posts query
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError
+  } = useInfiniteQuery({
+    queryKey: ['posts'],
+    queryFn: async ({ pageParam = 1 }) => {
       
-      try {
-  
-        const res = await all(token, page);
-  
-        console.log(res);
+      const token = JSON.parse(localStorage.getItem("user"))?.jwt;
+      const res = await all(token, pageParam);
+      
+      console.log(res);
+
+      if (res.success) {
+        setPostLikes(res.likedPosts);
+        setPostSaves(res.savedPosts);
         
-        if (res.success) {
-  
-          setPosts((prevPosts) => [...prevPosts, ...res.posts]);
-          setPostLikes(res.likedPosts);
-          setPostSaves(res.savedPosts);
-          
-          if(res.token && res.token != res) setLocalStorage("user", res.token, 21,res.user);
-
-        } else {
-          toast.error("Server Error");
+        if(res.token && res.token !== token) {
+          setLocalStorage("user", res.token, 21, res.user);
         }
-      
-      } catch (err) {
-        console.error(err);
-        toast.error("An error occurred while fetching posts.");
-      } finally {
-        setLoading(false);
-      }
+        
+        return res;
+      } else {
+
+        if(server_auth_errors.includes(res.message)) {
+          localStorage.removeItem("user");
+          toast.error(res.message);
+          navigate("/login");
+        } 
+         
+        throw new Error(res.error || "Failed to fetch posts");
     
-    };
+      }
+    },
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.posts.length > 0 ? pages.length + 1 : undefined;
+    },
+    onError: (error) => {
+      toast.error("An error occurred while fetching posts.");
+      console.error(error);
+    },
+    retry: 1, // Only retry once 
+  });
 
-    fetchPosts();
-  
-  }, [page]);
-
-  const loadMore = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const like = async (id) => {
-    setLoading(true);
-    const token = JSON.parse(localStorage.getItem("user")).jwt;
-    try {
-      const result = await likePost(id, token);
+  // Like post mutation
+  const likeMutation = useMutation({
+    mutationFn: async (postId) => {
+      const token = JSON.parse(localStorage.getItem("user")).jwt;
+      return await likePost(postId, token);
+    },
+    onSuccess: (result, postId) => {
       if (result.success) {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === id
-              ? {
-                  ...post,
-                  likes:
-                    result.type === "decrement"
-                      ? post.likes - 1
-                      : post.likes + 1,
-                }
-              : post
-          )
-        );
+        queryClient.setQueryData(['posts'], (oldData) => ({
+          ...oldData,
+          pages: oldData.pages.map(page => ({
+            ...page,
+            posts: page.posts.map(post =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes: result.type === "decrement" ? post.likes - 1 : post.likes + 1,
+                  }
+                : post
+            )
+          }))
+        }));
+
         setPostLikes((prev) => {
           if (result.type === "increment") {
-            return [...prev, id];
+            return [...prev, postId];
           } else {
-            return prev.filter((postId) => postId !== id);
+            return prev.filter((id) => id !== postId);
           }
         });
+
         toast.success(
           result.type === "decrement"
             ? "Post unliked successfully!"
@@ -98,17 +110,30 @@ const Index = () => {
       } else {
         toast.error(result.error);
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error(error);
       toast.error("An error occurred while liking/unliking the post.");
-    } finally {
-      setLoading(false);
     }
+  });
+
+  const loadMore = () => {
+    fetchNextPage();
   };
+
+  const like = (id) => {
+    likeMutation.mutate(id);
+  };
+
+  const allPosts = data?.pages.flatMap(page => page.posts) ?? [];
+
+  if (isError) {
+    return <div>Error loading posts</div>;
+  }
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <>
@@ -118,20 +143,20 @@ const Index = () => {
                 <Sidebar />
                 <div className="col-md-8 col-lg-6 vstack gap-4">
                   <ShareFeed />
-                  {posts.length > 0 ? (
-                    posts.map((value, index) => (
-                      <Post key={index} value={value} setPosts={setPosts} like={like} />
+                  {allPosts.length > 0 ? (
+                    allPosts.map((value, index) => (
+                      <Post key={index} value={value} like={like} />
                     ))
                   ) : (
                     <div>No posts available</div>
                   )}
-                  {posts.length > 1 && (
+                  {hasNextPage && (
                     <span
                       ref={showMoreButton}
                       className="btn btn-loader btn-primary-soft"
                       onClick={loadMore}
                     >
-                      {loading ? (
+                      {isFetchingNextPage ? (
                         <div className="load-icon">
                           <div className="spinner-grow spinner-grow-sm" role="status">
                             <span className="visually-hidden">Loading...</span>
@@ -279,7 +304,7 @@ const Index = () => {
                     <div className="col-sm-6 col-lg-12">
                       <div className="card">
                         <div className="card-header pb-0 border-0">
-                          <h5 className="card-title mb-0">Today’s news</h5>
+                          <h5 className="card-title mb-0">Today's news</h5>
                         </div>
                         <div className="card-body">
                           <div className="mb-3">

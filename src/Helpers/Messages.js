@@ -5,3 +5,15 @@ export const fail_register = "something is wrong in create account progress";
 export const fail_login = "something is wrong in login progress";
 export const user_exists = "you already logged in";
 export const auth_403 = "dear user please login first";
+
+
+
+export const server_auth_errors = [
+    "User-NotFound-In-Token",
+    "Token-Expired",
+    "Invalid-Token",
+    "Token-Not-Found",
+    "Token-Not-Valid",
+    "Authorization-Header-Missing",
+    "Token-Missing",
+]

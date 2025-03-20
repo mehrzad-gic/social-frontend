@@ -113,7 +113,9 @@ export const login = async () => {
             }  
 
             let final = false;  
-            const res = await verifyUser(storage.jwt);  
+            const res = await verifyUser(storage.jwt); 
+            
+            console.log(res);
             
             if (res.success === true) {     
         
