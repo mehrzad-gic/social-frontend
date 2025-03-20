@@ -15,15 +15,9 @@ import Info from "./components/Dashboard/Pages/Info";
 import { login } from "./Helpers/Helpers";
 import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
 import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
+import CheckOtp from "./components/Home/Auth/checkOtp";
 
-const checkAuth = async () => {
-  const auth = await login();
-  if (auth) {
-    toast.info("You are already logged in.");
-    return redirect("/");
-  }
-  return null;
-};
+
 
 
 const queryClient = new QueryClient({
@@ -59,8 +53,9 @@ function App() {
       ],
     },
     { path: "/forgot-password", element: <ForgotPassword /> },
-    { path: "/Login", element: <Login />, loader: checkAuth },
-    { path: "/Register", element: <Register />, loader: checkAuth },
+    { path: "/Login", element: <Login /> },
+    { path: "/Register", element: <Register /> },
+    { path: "/check-otp", element: <CheckOtp /> },
   ]);
 
   return (

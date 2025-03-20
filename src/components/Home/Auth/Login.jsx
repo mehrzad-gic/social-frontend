@@ -39,14 +39,13 @@ const Login = () => {
             const res = await loginUser(form); // Await the loginUser call
             console.log(res);
 
-            if (res.statusCode === 400) {
-                toast.error(invalid_login);
-                setErrors(res.errors);
+            if(res.success) {
+                toast.success(res.message);
+                navigate('/check-otp');
             } else {
-                setLocalStorage("user", res.data.token, 21,res.data.user);
-                navigate('../');
-                toast.success(success_login);
+                toast.error(res.message);
             }
+
         } catch (error) {
             if (error.inner) {
                 setErrors(error.inner.map(err => err.message));
