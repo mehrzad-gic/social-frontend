@@ -129,7 +129,13 @@ export const verifyUser = (token) => {
 
 }
 
-const removeToken = () => {
 
-
+export const logoutUser = () => {
+    try {
+        localStorage.removeItem('user');
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
 };

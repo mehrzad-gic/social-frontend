@@ -1,8 +1,20 @@
 import { Link } from "react-router-dom";
 import ThemeSwitcher from "../../Layouts/ThemeSwitcher";
+import { logoutUser } from "../../../Controllers/AuthController";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 // Header Component
 const Header = () => {
+
+  const navigate = useNavigate();
+
+  const logout = (e) => {
+    e.preventDefault();
+    logoutUser();
+    toast.success('Logged out successfully');
+    navigate('/login');
+  }
 
   return (
 
@@ -732,7 +744,7 @@ const Header = () => {
                   <li>
                     <Link
                       className="dropdown-item bg-danger-soft-hover"
-                      to="sign-in-advance.html"
+                      onClick={logout}
                     >
                       <i className="bi bi-power fa-fw me-2"></i>Sign Out
                     </Link>

@@ -30,7 +30,7 @@ const CheckOtp = () => {
         try {
 
             setLoading(true);
-            const res = await checkOTP(form);
+            const res = await checkOTP({...form, email: email});
             console.log(res);
             if(res.success == true) {
                 setLocalStorage('user', res.token, 2, res.user);

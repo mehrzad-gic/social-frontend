@@ -29,6 +29,8 @@ export default function CheckOtpForgotPassword() {
 
             const res = await confirmResetPassword({...form, email: email});
 
+            console.log(res);
+
             if (res.success == true) {
                 toast.success(res.message);
                 navigate('/login');
