@@ -148,7 +148,9 @@ const Register = () => {
                                         <Link to="/forgot-password">Forgot password?</Link>
                                     </div>
                                     <div className="d-grid">
-                                        <button type="submit" className="btn btn-lg btn-primary">Register</button>
+                                        <button type="submit" disabled={loading} className="btn btn-lg btn-primary">
+                                            {loading ? 'submitting...' : 'Register'}
+                                        </button>
                                     </div>
                                     <p className="mb-0 mt-3">
                                         ©2024

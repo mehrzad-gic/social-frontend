@@ -12,12 +12,11 @@ import { LikesProvider } from "./Context/LikesContext";
 import { SavesProvider } from "./Context/SavesContext";
 import DashboardLayout from "./components/Layouts/DashboardLayout";
 import Info from "./components/Dashboard/Pages/Info";
-import { login } from "./Helpers/Helpers";
+// import { login } from "./Helpers/Helpers";
 import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
-import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
-import CheckOtp from "./components/Home/Auth/CheckOtp";
-
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CheckOtp from "./components/Home/Auth/CheckOtp.jsx";
+import CheckOtpForgotPassword from "./components/Home/Auth/CheckOtpForgotPassword.jsx";
 
 
 const queryClient = new QueryClient({
@@ -55,7 +54,9 @@ function App() {
     { path: "/forgot-password", element: <ForgotPassword /> },
     { path: "/Login", element: <Login /> },
     { path: "/Register", element: <Register /> },
-    { path: "/check-otp", element: <CheckOtp /> },
+    { path: "/check-otp/:email", element: <CheckOtp /> },
+    { path: "/check-forgot-password/:email", element: <CheckOtpForgotPassword /> },
+    { path: "/forgot-password", element: <ForgotPassword /> },
   ]);
 
   return (

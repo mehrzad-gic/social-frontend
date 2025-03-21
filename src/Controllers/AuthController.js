@@ -31,6 +31,37 @@ export const loginUser = (params) => {
 };
 
 
+// Forgot Password
+export const forgotPassword = (params) => {
+
+    return fetch(`${BACKEND_URL}/auth/reset-password`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json())
+    .catch((err) => err);
+
+};
+
+// Confirm Reset Password
+export const confirmResetPassword = (params) => {
+
+    return fetch(`${BACKEND_URL}/auth/confirm-reset-password`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json())
+    .catch((err) => err);
+
+};
+
+
 // Send OTP
 export const sendOTP = (params) => {
 

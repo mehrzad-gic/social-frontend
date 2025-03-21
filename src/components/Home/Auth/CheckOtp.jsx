@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import {useNavigate, Link } from "react-router-dom";
+import {useNavigate, Link, useParams } from "react-router-dom";
 import { loginUser } from "../../../Controllers/AuthController";
 import { loginSchema } from "../../../validations/AuthValidation";
 import { setLocalStorage } from "../../../Helpers/Helpers";
@@ -13,12 +13,12 @@ import { checkOTP, sendOTP } from "../../../Controllers/AuthController";
 const CheckOtp = () => {
 
     const navigate = useNavigate();
-    const [form, setForm] = useState({ email: '', code: '' });
+    const [form, setForm] = useState({ code: '' });
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(false);
     const icon = useRef(null);
     const [timer, setTimer] = useState(120);
-
+    const { email } = useParams();
     const inputChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -26,19 +26,19 @@ const CheckOtp = () => {
     const submitForm = async (e) => {
 
         e.preventDefault();
-        setLoading(true); // Set loading to true
 
         try {
 
+            setLoading(true);
             const res = await checkOTP(form);
             console.log(res);
-            // if(res.success == true) {
-            //     setLocalStorage('token', res.token, 2, res.user);
-            //     toast.success(res.message);
-            //     navigate('/');
-            // } else {
-            //     toast.error(res.message);
-            // }
+            if(res.success == true) {
+                setLocalStorage('user', res.token, 2, res.user);
+                toast.success(res.message);
+                navigate('/');
+            } else {
+                toast.error(res.message);
+            }
 
         } catch (error) {
             console.log(error);
@@ -49,11 +49,26 @@ const CheckOtp = () => {
     };
 
     const resendOtp = async () => {
-        setTimer(120);
-        const res = await sendOTP(form);
-        console.log(res);
-        if(res.success) toast.success(res.message);
-        else toast.error(res.message);
+
+        try {
+
+            setLoading(true);
+            setTimer(120);
+            const formData = {
+                ...form,
+                email: email
+            }
+            const res = await sendOTP(formData);
+            console.log(res);
+            if(res.success) toast.success(res.message);
+            else toast.error(res.message);
+            
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+
     };
 
 
@@ -75,18 +90,6 @@ const CheckOtp = () => {
                             <h1 className="mb-2">Check OTP</h1>
 
                             <form onSubmit={submitForm} className="mt-sm-4">
-                                <div className="mb-3 input-group-lg">
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        onChange={inputChange}
-                                        value={form.email}
-                                        className="form-control"
-                                        placeholder="Enter your Email Address"
-                                        required
-                                    />
-                                </div>
-
                                 <div className="mb-3 input-group-lg">
                                     <input
                                         type="text"
@@ -114,7 +117,9 @@ const CheckOtp = () => {
                                         </p>
                                     ) : (
                                         <p className="mb-0 mt-3">
-                                            <button className="btn btn-link" onClick={resendOtp}>Resend OTP</button>
+                                            <button className="btn btn-link" onClick={resendOtp}>
+                                                {loading ? 'submitting...' : 'Resend OTP'}
+                                            </button>
                                         </p>
                                     )} 
                                 </div>

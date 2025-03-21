@@ -1,91 +1,54 @@
 import React, { useRef, useState, useEffect } from "react";  
 import { useNavigate, Link } from "react-router-dom";  
-import { loginUser } from "../../../Controllers/AuthController";  
-import { loginSchema } from "../../../validations/AuthValidation";  
-import { login, setLocalStorage } from "../../../Helpers/Helpers";  
+import { forgotPassword } from "../../../Controllers/AuthController";  
 import { toast } from 'react-toastify';  
-import { invalid_login, success_login } from "../../../Helpers/Messages";  
+import { forgotPasswordSchema } from "../../../validations/AuthValidation";
 
 
 const ForgotPassword = () => {  
     
-    const [form, setForm] = useState({ email: '', password: '' });  
-    const [errors, setErrors] = useState(null);  
-    const [loading, setLoading] = useState(true);  
+    const [form, setForm] = useState({ email: '' });  
+    const [loading, setLoading] = useState(false);  
     const navigate = useNavigate();  
-
-    useEffect(() => {  
-        const checkLogin = async () => {  
-            const isLoggedIn = await login(); // Assume this checks if the user is logged in  
-            setLoading(false);  
-            
-            if (isLoggedIn) {  
-                navigate("../");  
-                toast.info("You are already logged in.");  
-            }  
-        };  
-
-        checkLogin();  
-    }, [navigate]);  
 
 
     const inputChange = (e) => {  
         setForm({ ...form, [e.target.name]: e.target.value });  
     };  
 
-    const submitForm = async (e) => {  
+    const submitForm = async (e) => { 
+
         e.preventDefault();  
 
         try {  
-            await loginSchema.validate(form, { abortEarly: false });  
 
-            const res = await loginUser(form);  
+            setLoading(true);
+            await forgotPasswordSchema.validate(form, { abortEarly: false });
 
-            if (res.res === 'error') {  
-                toast.error(invalid_login);  
-            } else {  
+            const res = await forgotPassword(form);
 
-                setLocalStorage("user", res.data, 21);  
-                navigate('../');  
-                toast.success(success_login);  
-            }  
+            if (res.success === false) toast.error(res.message);
+            
+            toast.success(res.message);
+
+            navigate(`/check-forgot-password/${form.email}`);
+
         } catch (error) {  
-            if (error.inner) {  
-                setErrors(error.inner);  
-            } else {  
-                setErrors(error.message);  
-            }  
-        }  
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
 
-        setTimeout(() => {  
-            setErrors(null);  
-        }, 4000);  
-    };  
-
-    if (loading) return null; // Render nothing or a loading spinner while loading  
+    };
 
     return (  
         <main>  
             <div className="container">  
                 <div className="row justify-content-center align-items-center vh-100 py-5">  
                     <div className="col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">  
-                        {errors && Array.isArray(errors) ? (  
-                            errors.map((err, index) => (  
-                                <div key={index} className="alert alert-danger">  
-                                    <i className="bi bi-exclamation-circle me-2"></i>  
-                                    {err.message}  
-                                </div>  
-                            ))  
-                        ) : (  
-                            errors && (  
-                                <div className="alert alert-danger">  
-                                    <i className="bi bi-exclamation-circle me-2"></i>  
-                                    {errors}  
-                                </div>  
-                            )  
-                        )}  
+
                         <div className="card card-body text-center p-4 p-sm-5">  
-                            <h1 className="mb-2">Login</h1>  
+                            <h1 className="mb-2">Forgot Password</h1>  
                             <p className="mb-0">  
                                 Don't have an account ?  
                                 <Link to="/register"> Sign Up</Link>  
@@ -103,9 +66,11 @@ const ForgotPassword = () => {
                                     />  
                                 </div>  
                                 <div className="d-grid">  
-                                    <button type="submit" className="btn btn-lg btn-primary">Send Reset Password Email</button>  
+                                    <button type="submit" onClick={submitForm} disabled={loading}  className="btn btn-lg btn-primary">
+                                        {loading ? 'submitting...' : 'Send Reset Password Email'}
+                                    </button>  
                                 </div>  
-                                <p className="mb-0 mt-3">  
+                                    <p className="mb-0 mt-3">  
                                     ©2024  
                                     <Link className="me-2 ms-2" to={'../'}> Dev on Rails</Link>  
                                     All rights reserved  

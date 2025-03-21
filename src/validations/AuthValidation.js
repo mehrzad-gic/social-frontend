@@ -12,3 +12,16 @@ export const loginSchema = Yup.object().shape({
     email: Yup.string().email("invalid email address").required("email is required"),
     password: Yup.string().min(8).required("password is required"),
 });
+
+export const forgotPasswordSchema = Yup.object().shape({
+    email: Yup.string().email("invalid email address").required("email is required"),
+});
+
+
+export const checkOTPForgotPasswordSchema = Yup.object().shape({
+    token: Yup.string().required("token is required"),
+    password: Yup.string().min(8).required("password is required"),
+    password_confirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required("Password confirmation is required"),
+});
+

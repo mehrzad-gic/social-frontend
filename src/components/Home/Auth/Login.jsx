@@ -43,7 +43,7 @@ const Login = () => {
 
             if(res.success) {
                 toast.success(res.message);
-                navigate('/check-otp');
+                navigate(`/check-otp/${form.email}`);
             } else {
                 toast.error(res.message);
             }
@@ -117,7 +117,9 @@ const Login = () => {
                                     <Link to="/forgot-password">Forgot password?</Link>
                                 </div>
                                 <div className="d-grid">
-                                    <button type="submit" className="btn btn-lg btn-primary">Send OTP</button>
+                                    <button type="submit" disabled={loading} className="btn btn-lg btn-primary">
+                                        {loading ? 'submitting...' : 'Send OTP'}
+                                    </button>
                                 </div>
                                 <p className="mb-0 mt-3">
                                     ©2024
