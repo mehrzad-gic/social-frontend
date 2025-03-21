@@ -7,15 +7,17 @@ import { toast } from 'react-toastify';
 import { invalid_login, success_login } from "../../../Helpers/Messages";
 import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
 import Loading from "../Ui/Loading";
+import { checkOTP, sendOTP } from "../../../Controllers/AuthController";
+
 
 const CheckOtp = () => {
 
+    const navigate = useNavigate();
     const [form, setForm] = useState({ email: '', code: '' });
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(false);
     const icon = useRef(null);
-    const navigate = useNavigate();
-
+    const [timer, setTimer] = useState(120);
 
     const inputChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,12 +30,39 @@ const CheckOtp = () => {
 
         try {
 
+            const res = await checkOTP(form);
+            console.log(res);
+            // if(res.success == true) {
+            //     setLocalStorage('token', res.token, 2, res.user);
+            //     toast.success(res.message);
+            //     navigate('/');
+            // } else {
+            //     toast.error(res.message);
+            // }
+
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
 
     };
 
+    const resendOtp = async () => {
+        setTimer(120);
+        const res = await sendOTP(form);
+        console.log(res);
+        if(res.success) toast.success(res.message);
+        else toast.error(res.message);
+    };
+
+
+    useEffect(() => {
+
+        const timerInterval = setInterval(() => setTimer(timer - 1), 1000); 
+        return () => clearInterval(timerInterval);
+
+    }, [timer]);
 
     return (
 
@@ -43,11 +72,8 @@ const CheckOtp = () => {
                     <div className="col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
                         <ErrorMessages errors={errors} /> {/* Use the ErrorMessages component */}
                         <div className="card card-body text-center p-4 p-sm-5">
-                            <h1 className="mb-2">Login</h1>
-                            <p className="mb-0">
-                                Don't have an account ?
-                                <Link to="/register"> Sign Up</Link>
-                            </p>
+                            <h1 className="mb-2">Check OTP</h1>
+
                             <form onSubmit={submitForm} className="mt-sm-4">
                                 <div className="mb-3 input-group-lg">
                                     <input
@@ -60,30 +86,38 @@ const CheckOtp = () => {
                                         required
                                     />
                                 </div>
-                                <div className="mb-3 position-relative">
-                                    <div className="input-group input-group-lg">
-                                        <input
-                                            className="form-control"
-                                            type={passwordType}
-                                            name="password"
-                                            onChange={inputChange}
-                                            value={form.password}
-                                            placeholder="Enter your password"
-                                            required
-                                        />
-                                        <span onClick={passwordHidden} className="input-group-text p-0">
-                                            <i ref={icon} className="fa-solid fa-eye-slash p-2 cursor-pointer"></i>
-                                        </span>
-                                    </div>
+
+                                <div className="mb-3 input-group-lg">
+                                    <input
+                                        type="text"
+                                        name="code"
+                                        onChange={inputChange}
+                                        value={form.code}
+                                        className="form-control"
+                                        placeholder="Enter your OTP"
+                                        required
+                                    />
                                 </div>
+
                                 <div className="d-grid">
                                     <button type="submit" disabled={loading} className="btn btn-lg btn-primary">{loading ? 'submitting...' : 'Check OTP'}</button>
                                 </div>
-                                <p className="mb-0 mt-3">
-                                    ©2024
-                                    <Link className="me-2 ms-2" to={'../'}> Dev on Rails</Link>
-                                    All rights reserved
-                                </p>
+                                <div className="d-flex justify-content-between flex-wrap">
+                                    <p className="mb-0 mt-3">
+                                        ©2024
+                                        <Link className="me-2 ms-2" to={'../'}> Dev on Rails</Link>
+                                        All rights reserved
+                                    </p>
+                                    {timer > 0 ? (
+                                        <p className="mb-0 mt-3">
+                                            Resend OTP in {timer}  seconds
+                                        </p>
+                                    ) : (
+                                        <p className="mb-0 mt-3">
+                                            <button className="btn btn-link" onClick={resendOtp}>Resend OTP</button>
+                                        </p>
+                                    )} 
+                                </div>
                             </form>
                         </div>
                     </div>

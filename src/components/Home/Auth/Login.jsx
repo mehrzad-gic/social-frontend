@@ -8,6 +8,7 @@ import { invalid_login, success_login } from "../../../Helpers/Messages";
 import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
 import Loading from "../Ui/Loading";
 
+
 const Login = () => {
 
     const [form, setForm] = useState({ email: '', password: '' });
@@ -16,6 +17,7 @@ const Login = () => {
     const [passwordType, setPasswordType] = useState('password');
     const icon = useRef(null);
     const navigate = useNavigate();
+
 
     const passwordHidden = () => {
         setPasswordType(prevType => prevType === 'password' ? 'text' : 'password');
@@ -106,16 +108,16 @@ const Login = () => {
                                     </div>
                                 </div>
                                 <div className="mb-3 d-sm-flex justify-content-between">
-                                    <div>
+                                    {/* <div>
                                         <input type="checkbox" className="form-check-input" id="rememberCheck" />
                                         <label className="form-check-label ms-2" htmlFor="rememberCheck">
                                             Remember me?
                                         </label>
-                                    </div>
+                                    </div> */}
                                     <Link to="/forgot-password">Forgot password?</Link>
                                 </div>
                                 <div className="d-grid">
-                                    <button type="submit" className="btn btn-lg btn-primary">Login</button>
+                                    <button type="submit" className="btn btn-lg btn-primary">Send OTP</button>
                                 </div>
                                 <p className="mb-0 mt-3">
                                     ©2024

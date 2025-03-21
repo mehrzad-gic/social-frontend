@@ -31,6 +31,37 @@ export const loginUser = (params) => {
 };
 
 
+// Send OTP
+export const sendOTP = (params) => {
+
+    return fetch(`${BACKEND_URL}/auth/send-otp`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json())
+    .catch((err) => err);
+
+};
+
+
+// Check OTP
+export const checkOTP = (params) => {
+
+    return fetch(`${BACKEND_URL}/auth/check-otp`, {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    })
+    .then((response) => response.json())
+    .catch((err) => err);
+
+};
+
 // Logout the user
 export const logout = () => {
 

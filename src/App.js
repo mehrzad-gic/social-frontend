@@ -15,7 +15,7 @@ import Info from "./components/Dashboard/Pages/Info";
 import { login } from "./Helpers/Helpers";
 import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
 import { QueryClient,QueryClientProvider } from "@tanstack/react-query";
-import CheckOtp from "./components/Home/Auth/checkOtp";
+import CheckOtp from "./components/Home/Auth/CheckOtp";
 
 
 
