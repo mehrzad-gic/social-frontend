@@ -120,19 +120,27 @@ const AdminLayout = () => {
     <div className="admin-dashboard" data-theme={theme}>
       {/* Navbar */}
       <nav className={`navbar navbar-expand-lg fixed-top ${isScrolled ? 'navbar-scrolled' : ''}`}>
-        <div className="container-fluid px-4">
+        <div className="container-fluid px-3">
           <div className="d-flex align-items-center">
             <button
-              className="btn btn-link d-lg-none me-2"
+              className="btn btn-link text-decoration-none me-2 d-lg-none"
               onClick={toggleMobileSidebar}
+              style={{ color: 'var(--admin-text-primary)' }}
             >
-              <FaBars className="fs-4" />
+              {isMobileSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            </button>
+            <button
+              className="btn btn-link text-decoration-none me-2 d-none d-lg-block"
+              onClick={toggleSidebar}
+              style={{ color: 'var(--admin-text-primary)' }}
+            >
+              {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
             <Link className="navbar-brand" to="/admin">
               Admin Panel
             </Link>
           </div>
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-2">
             <button className="theme-toggle" onClick={toggleTheme}>
               {theme === 'light' ? <FaMoon className="fs-5" /> : <FaSun className="fs-5" />}
             </button>
@@ -207,14 +215,6 @@ const AdminLayout = () => {
 
       {/* Sidebar */}
       <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''} ${isMobileSidebarOpen ? 'mobile-open' : ''}`}>
-        <div className="p-3 border-bottom">
-          <div className="d-flex justify-content-between align-items-center">
-            <span className={`${!isSidebarOpen ? 'd-none' : ''} fw-medium`}>Admin Menu</span>
-            <button className="btn btn-link d-none d-lg-block p-0" onClick={toggleSidebar}>
-              {isSidebarOpen ? <FaTimes /> : <FaBars />}
-            </button>
-          </div>
-        </div>
         <div className="p-3">
           <ul className="nav flex-column gap-1">
             {menuItems.map((item) => (
@@ -244,6 +244,7 @@ const AdminLayout = () => {
                             <Link
                               className={`nav-link py-2 ${location.pathname === subItem.path ? 'active' : ''}`}
                               to={subItem.path}
+                              onClick={() => setIsMobileSidebarOpen(false)}
                             >
                               {subItem.title}
                             </Link>
@@ -256,6 +257,7 @@ const AdminLayout = () => {
                   <Link
                     className={`nav-link d-flex align-items-center gap-2 ${location.pathname === item.path ? 'active' : ''}`}
                     to={item.path}
+                    onClick={() => setIsMobileSidebarOpen(false)}
                   >
                     {item.icon}
                     {isSidebarOpen && <span>{item.title}</span>}
@@ -269,7 +271,7 @@ const AdminLayout = () => {
 
       {/* Main Content */}
       <main className={`admin-main-content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-        <div className="container-fluid px-4 py-3">
+        <div className="container-fluid px-3 py-3">
           <div className="content-wrapper">
             <Outlet />
           </div>
