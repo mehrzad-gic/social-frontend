@@ -53,7 +53,7 @@ const DataTable = ({
               {columns.map((column) => (
                 <th
                   key={column.field}
-                  className={column.sortable ? 'cursor-pointer' : ''}
+                  className={`cursor-pointer ${column.sortable ? 'cursor-pointer' : ''}`}
                   onClick={() => column.sortable && handleSort(column.field)}
                 >
                   {column.label}

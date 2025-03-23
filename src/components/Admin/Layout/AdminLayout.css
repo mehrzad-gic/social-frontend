@@ -9,39 +9,39 @@
 
 /* Theme Variables */
 .admin-dashboard {
-  --admin-primary: #4f46e5;
-  --admin-secondary: #6b7280;
+  /* Light Theme Variables */
+  --admin-primary: #0d6efd;
+  --admin-primary-rgb: 13, 110, 253;
+  --admin-secondary: #6c757d;
+  --admin-success: #198754;
+  --admin-danger: #dc3545;
+  --admin-warning: #ffc107;
+  --admin-info: #0dcaf0;
+  --admin-bg-primary: #ffffff;
+  --admin-bg-secondary: #f8f9fa;
+  --admin-bg-hover: #f1f3f5;
+  --admin-text-primary: #212529;
+  --admin-text-secondary: #6c757d;
+  --admin-border-color: #dee2e6;
+  --admin-btn-close-filter: invert(0) grayscale(100%) brightness(200%);
+}
+
+.admin-dashboard[data-theme="dark"] {
+  /* Dark Theme Variables */
+  --admin-primary: #3b82f6;
+  --admin-primary-rgb: 59, 130, 246;
+  --admin-secondary: #9ca3af;
   --admin-success: #10b981;
   --admin-danger: #ef4444;
   --admin-warning: #f59e0b;
   --admin-info: #3b82f6;
-  --admin-bg-primary: #ffffff;
-  --admin-bg-secondary: #f9fafb;
-  --admin-bg-hover: #f3f4f6;
-  --admin-text-primary: #1a1a1a;
-  --admin-text-secondary: #4b5563;
-  --admin-border-color: #e5e7eb;
-  --admin-card-bg: #ffffff;
-  --admin-card-border: #e5e7eb;
-  --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.admin-dashboard[data-theme="dark"] {
-  --admin-primary: #818cf8;
-  --admin-secondary: #9ca3af;
-  --admin-success: #34d399;
-  --admin-danger: #f87171;
-  --admin-warning: #fbbf24;
-  --admin-info: #60a5fa;
   --admin-bg-primary: #0a0a0a;
-  --admin-bg-secondary: #111111;
+  --admin-bg-secondary: #0a0a0a;
   --admin-bg-hover: #1a1a1a;
   --admin-text-primary: #ffffff;
   --admin-text-secondary: #a0a0a0;
   --admin-border-color: #1a1a1a;
-  --admin-card-bg: #111111;
-  --admin-card-border: #1a1a1a;
-  --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --admin-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 /* Text Color Fixes */
@@ -84,14 +84,16 @@
 /* Navbar Styles */
 .admin-dashboard .navbar {
   height: 70px;
-  background-color: var(--admin-bg-primary);
+  background-color: var(--admin-bg-secondary);
   border-bottom: 1px solid var(--admin-border-color);
   transition: all 0.3s ease;
   padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .admin-dashboard .navbar-scrolled {
-  box-shadow: var(--admin-shadow);
+  background-color: var(--admin-bg-secondary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .admin-dashboard .navbar-brand {
@@ -107,7 +109,7 @@
   border: none;
   padding: 0.75rem;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   border-radius: 0.5rem;
 }
 
@@ -170,15 +172,15 @@
 
 /* Card Styles */
 .admin-dashboard .card {
-  background-color: var(--admin-card-bg);
-  border: 1px solid var(--admin-card-border);
-  box-shadow: var(--admin-shadow);
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 0.75rem;
 }
 
 .admin-dashboard .card-header {
-  background-color: var(--admin-card-bg);
-  border-bottom: 1px solid var(--admin-card-border);
+  background-color: var(--admin-bg-secondary);
+  border-bottom: 1px solid var(--admin-border-color);
   padding: 1.25rem;
 }
 
@@ -188,9 +190,9 @@
 
 /* Dropdown Styles */
 .admin-dashboard .dropdown-menu {
-  background-color: var(--admin-card-bg);
-  border: 1px solid var(--admin-card-border);
-  box-shadow: var(--admin-shadow);
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border-radius: 0.5rem;
   padding: 0.5rem;
 }
@@ -203,7 +205,7 @@
 
 .admin-dashboard .dropdown-item:hover {
   background-color: var(--admin-bg-hover);
-  color: var(--admin-primary);
+  color: var(--admin-text-primary);
 }
 
 /* Notifications Styles */
@@ -271,4 +273,151 @@
 
 .admin-dashboard ::-webkit-scrollbar-thumb:hover {
   background: var(--admin-text-secondary);
+}
+
+/* Table Styles */
+.admin-dashboard .table {
+  color: var(--admin-text-primary);
+  margin-bottom: 0;
+}
+
+.admin-dashboard .table thead th {
+  background-color: var(--admin-bg-secondary);
+  border-bottom: 2px solid var(--admin-border-color);
+  color: var(--admin-text-secondary);
+  font-weight: 600;
+  padding: 1rem;
+  white-space: nowrap;
+}
+
+.admin-dashboard .table tbody td {
+  border-bottom: 1px solid var(--admin-border-color);
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.admin-dashboard .table tbody tr:hover {
+  background-color: var(--admin-bg-hover);
+}
+
+.admin-dashboard .table .badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+}
+
+/* Modal Styles */
+.admin-dashboard .modal-content {
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-text-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-dashboard .modal-header {
+  background-color: var(--admin-bg-secondary);
+  border-bottom: 1px solid var(--admin-border-color);
+  padding: 1.25rem;
+}
+
+.admin-dashboard .modal-title {
+  color: var(--admin-text-primary);
+  font-weight: 600;
+}
+
+.admin-dashboard .modal-body {
+  background-color: var(--admin-bg-primary);
+  padding: 1.25rem;
+}
+
+.admin-dashboard .modal-footer {
+  background-color: var(--admin-bg-secondary);
+  border-top: 1px solid var(--admin-border-color);
+  padding: 1.25rem;
+}
+
+.admin-dashboard .form-control,
+.admin-dashboard .form-select {
+  background-color: var(--admin-bg-secondary);
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .form-control:focus,
+.admin-dashboard .form-select:focus {
+  background-color: var(--admin-bg-secondary);
+  border-color: var(--admin-primary);
+  color: var(--admin-text-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--admin-primary-rgb), 0.25);
+}
+
+.admin-dashboard .form-label {
+  color: var(--admin-text-secondary);
+  font-weight: 500;
+}
+
+.admin-dashboard .btn-close {
+  filter: var(--admin-btn-close-filter);
+}
+
+/* Card Styles */
+.admin-dashboard .card {
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .card-header {
+  background-color: var(--admin-bg-secondary);
+  border-bottom: 1px solid var(--admin-border-color);
+  color: var(--admin-text-secondary);
+  font-weight: 600;
+  padding: 1.25rem;
+}
+
+.admin-dashboard .card-body {
+  padding: 1.25rem;
+}
+
+.admin-dashboard .card-footer {
+  background-color: var(--admin-bg-secondary);
+  border-top: 1px solid var(--admin-border-color);
+  padding: 1.25rem;
+}
+
+/* Input Group Styles */
+.admin-dashboard .input-group-text {
+  background-color: var(--admin-bg-secondary);
+  border: 1px solid var(--admin-border-color);
+  color: var(--admin-text-secondary);
+}
+
+/* Dropdown Styles */
+.admin-dashboard .dropdown-menu {
+  background-color: var(--admin-bg-primary);
+  border: 1px solid var(--admin-border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-dashboard .dropdown-item {
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .dropdown-item:hover {
+  background-color: var(--admin-bg-hover);
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .dropdown-divider {
+  border-top-color: var(--admin-border-color);
+}
+
+/* Badge Styles */
+.admin-dashboard .badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+}
+
+/* Spinner Styles */
+.admin-dashboard .spinner-border {
+  color: var(--admin-primary) !important;
 } 
