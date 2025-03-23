@@ -19,6 +19,7 @@ import CheckOtp from "./components/Home/Auth/CheckOtp.jsx";
 import CheckOtpForgotPassword from "./components/Home/Auth/CheckOtpForgotPassword.jsx";
 import AdminLayout from "./components/Admin/Layout/AdminLayout";
 import IndexAdmin from "./components/Admin/Index";
+import Tags from "./components/Admin/Pages/Tags.jsx";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -31,6 +32,8 @@ const queryClient = new QueryClient({
 function App() {
 
   const router = createBrowserRouter([
+
+    // Home Routes
     {
       path: "/",
       element: <HomeLayout />,
@@ -52,6 +55,8 @@ function App() {
         },
       ],
     },
+
+    // Dashboard Routes
     {
       path: "/dashboard",
       element: <DashboardLayout />,
@@ -62,15 +67,29 @@ function App() {
         { path: "CloseAccount", element: <Info /> },
       ]
     },
-    { path: "/forgot-password", element: <ForgotPassword /> },
-    { path: "/Login", element: <Login /> },
-    { path: "/Register", element: <Register /> },
-    { path: "/check-otp/:email", element: <CheckOtp /> },
-    { path: "/check-forgot-password/:email", element: <CheckOtpForgotPassword /> },
-    { path: "/forgot-password", element: <ForgotPassword /> },
-    { path: '/admin', element: <AdminLayout /> , children : [
-      { path: '', element: <IndexAdmin /> },
-    ]},
+
+    // Auth Routes
+    {
+      path: "/",
+      children: [
+        { path: "/forgot-password", element: <ForgotPassword /> },
+        { path: "/Login", element: <Login /> },
+        { path: "/Register", element: <Register /> },
+        { path: "/check-otp/:email", element: <CheckOtp /> },
+        { path: "/check-forgot-password/:email", element: <CheckOtpForgotPassword /> },
+      ]
+    },
+
+    // Admin Routes
+    {
+      path: '/admin',
+      element: <AdminLayout />,
+      children: [
+        { index: true, element: <IndexAdmin /> },
+        { path: 'tags', element: <Tags /> },
+      ]
+    },
+
   ]);
 
   return (

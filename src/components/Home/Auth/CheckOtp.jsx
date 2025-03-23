@@ -5,7 +5,7 @@ import { loginSchema } from "../../../validations/AuthValidation";
 import { setLocalStorage } from "../../../Helpers/Helpers";
 import { toast } from 'react-toastify';
 import { invalid_login, success_login } from "../../../Helpers/Messages";
-import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
+import ErrorMessages from "../Ui/ErrorMessages"; // Import the ErrorMessages component
 import Loading from "../Ui/Loading";
 import { checkOTP, sendOTP } from "../../../Controllers/AuthController";
 

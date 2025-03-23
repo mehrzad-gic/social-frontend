@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { success_register } from "../../../Helpers/Messages";
 import Loading from "../Ui/Loading"; // Import the Loading component
 import { login } from "../../../Helpers/Helpers";
-import ErrorMessages from "../../Common/ErrorMessages"; // Import the ErrorMessages component
+import ErrorMessages from "../Ui/ErrorMessages"; // Import the ErrorMessages component
 
 // Register Component
 const Register = () => {
