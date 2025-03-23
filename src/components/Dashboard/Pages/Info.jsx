@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";  
 import { useFormik } from "formik";
 import * as Yup from "yup"; // For validation
 import { updateInfo, checkSlugUnique } from "../../../Controllers/UserController"; // Import necessary functions
+import { Link } from "react-router-dom";
+import { FaUsers, FaComments, FaHeart, FaBookmark, FaChartLine, FaBell, FaCog } from "react-icons/fa";
 
 const Info = () => {
     const { user, token } = useOutletContext();  
+    const [activeTab, setActiveTab] = useState('overview');
 
     const formik = useFormik({
         initialValues: {
@@ -94,183 +97,202 @@ const Info = () => {
     }, [user]);
 
     return (
-        <div>
-            <div className="card mb-4">
-                <div className="card-header border-0 pb-0">
-                    <h1 className="h5 card-title">Account Settings</h1>
-                    <p className="mb-0">He moonlights difficult engrossed it, sportsmen. Interested has all Devonshire difficulty gay assistance joy.</p>
-                </div>
-                <div className="card-body">
-                    <form className="row g-3" onSubmit={formik.handleSubmit}>
-                        <div className="col-sm-6 col-lg-6">
-                            <label className="form-label">Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
-                                name="name"
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Enter your name"
-                            />
-                            {formik.touched.name && formik.errors.name ? (
-                                <div className="invalid-feedback">{formik.errors.name}</div>
-                            ) : null}
+        <div className="container-fluid">
+            <div className="row">
+                {/* Main Content */}
+                <div className="col-12">
+                    {/* Page Header */}
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h4 className="mb-0">Dashboard Overview</h4>
+                        <div className="d-flex gap-2">
+                            <button className="btn btn-light">
+                                <FaBell className="me-2" /> Notifications
+                            </button>
+                            <button className="btn btn-light">
+                                <FaCog className="me-2" /> Settings
+                            </button>
                         </div>
-                        <div className="col-sm-6 col-lg-6">
-                            <label className="form-label">Title</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="title"
-                                value={formik.values.title}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Enter your title"
-                            />
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">User Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${formik.touched.slug && formik.errors.slug ? 'is-invalid' : ''}`}
-                                name="slug"
-                                value={formik.values.slug}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Enter your username"
-                            />
-                            {formik.touched.slug && formik.errors.slug ? (
-                                <div className="invalid-feedback">{formik.errors.slug}</div>
-                            ) : null}
-                        </div>
-                        <div className="col-lg-6">
-                            <label className="form-label">Birthday</label>
-                            <input
-                                type="date"
-                                className={`form-control ${formik.touched.birthday && formik.errors.birthday ? 'is-invalid' : ''}`}
-                                name="birthday"
-                                value={formik.values.birthday}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                            />
-                            {formik.touched.birthday && formik.errors.birthday ? (
-                                <div className="invalid-feedback">{formik.errors.birthday}</div>
-                            ) : null}
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">Email</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={user.email}
-                                readOnly
-                                placeholder="Your email address"
-                            />
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">Image Background</label>
-                            <input
-                                type="file"
-                                className="form-control"
-                                name="img_bg"
-                                onChange={(event) => {
-                                    formik.setFieldValue("img_bg", event.currentTarget.files[0]);
-                                }}
-                            />
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">Image</label>
-                            <input
-                                type="file"
-                                className="form-control"
-                                name="img"
-                                onChange={(event) => {
-                                    formik.setFieldValue("img", event.currentTarget.files[0]);
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Overview</label>
-                            <textarea
-                                className="form-control"
-                                rows="4"
-                                name="bio"
-                                value={formik.values.bio}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Write a brief overview about yourself"
-                            />
-                            <small>Character limit: 555</small>
-                        </div>
-                        <hr />
-                        <div className="col-12">
-                            <h5 className="card-title mb-0">Social Links</h5>
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">Github</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="github"
-                                value={formik.values.github}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Enter your GitHub profile link"
-                            />
-                        </div>
-                        <div className="col-sm-6">
-                            <label className="form-label">X</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="x"
-                                value={formik.values.x}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                placeholder="Enter your X (Twitter) handle"
-                            />
-                        </div>
-                        <div className="col-12 text-end">
-                            <button type="submit" className="btn btn-sm btn-primary mb-0">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                    </div>
 
-            {/* Password Change Section */}
-            <div className="card">
-                <div className="card-header border-0 pb-0">
-                    <h5 className="card-title">Change your password</h5>
-                    <p className="mb-0">See resolved goodness felicity shy civility domestic had but.</p>
-                </div>
-                <div className="card-body">
-                    <form className="row g-3">
-                        <div className="col-12">
-                            <label className="form-label">Current password</label>
-                            <input type="password" className="form-control" placeholder="Enter your current password" />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">New password</label>
-                            <div className="input-group">
-                                <input className="form-control" type="password" placeholder="Enter new password" />
-                                <span className="input-group-text p-0">
-                                    <i className="fa-solid fa-eye-slash cursor-pointer p-2 w-40px"></i>
-                                </span>
+                    {/* Stats Cards */}
+                    <div className="row g-4 mb-4">
+                        <div className="col-sm-6 col-xl-3">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <div className="flex-shrink-0">
+                                            <div className="avatar avatar-lg bg-primary bg-opacity-10 rounded">
+                                                <FaUsers className="text-primary fs-4" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-grow-1 ms-3">
+                                            <h6 className="card-title mb-1">Total Followers</h6>
+                                            <h2 className="mb-0">2.4k</h2>
+                                            <small className="text-success">
+                                                <FaChartLine className="me-1" /> 12% increase
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="mt-2 password-strength-meter">
-                                <div className="password-strength-meter-score"></div>
+                        </div>
+                        <div className="col-sm-6 col-xl-3">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <div className="flex-shrink-0">
+                                            <div className="avatar avatar-lg bg-success bg-opacity-10 rounded">
+                                                <FaComments className="text-success fs-4" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-grow-1 ms-3">
+                                            <h6 className="card-title mb-1">Comments</h6>
+                                            <h2 className="mb-0">1.2k</h2>
+                                            <small className="text-success">
+                                                <FaChartLine className="me-1" /> 8% increase
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="rounded mt-1">Write your password...</div>
                         </div>
-                        <div className="col-12">
-                            <label className="form-label">Confirm password</label>
-                            <input type="password" className="form-control" placeholder="Confirm your new password" />
+                        <div className="col-sm-6 col-xl-3">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <div className="flex-shrink-0">
+                                            <div className="avatar avatar-lg bg-warning bg-opacity-10 rounded">
+                                                <FaHeart className="text-warning fs-4" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-grow-1 ms-3">
+                                            <h6 className="card-title mb-1">Likes</h6>
+                                            <h2 className="mb-0">3.8k</h2>
+                                            <small className="text-success">
+                                                <FaChartLine className="me-1" /> 15% increase
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-12 text-end">
-                            <button type="submit" className="btn btn-primary mb-0">Change Password</button>
+                        <div className="col-sm-6 col-xl-3">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center">
+                                        <div className="flex-shrink-0">
+                                            <div className="avatar avatar-lg bg-info bg-opacity-10 rounded">
+                                                <FaBookmark className="text-info fs-4" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-grow-1 ms-3">
+                                            <h6 className="card-title mb-1">Saved Posts</h6>
+                                            <h2 className="mb-0">856</h2>
+                                            <small className="text-success">
+                                                <FaChartLine className="me-1" /> 5% increase
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    {/* Main Content Area */}
+                    <div className="row g-4">
+                        {/* Activity Feed */}
+                        <div className="col-lg-8">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-header bg-transparent border-0">
+                                    <h5 className="card-title mb-0">Recent Activity</h5>
+                                </div>
+                                <div className="card-body">
+                                    <div className="activity-feed">
+                                        {/* Activity Item */}
+                                        <div className="d-flex mb-4">
+                                            <div className="flex-shrink-0">
+                                                <div className="avatar avatar-md rounded-circle bg-primary bg-opacity-10">
+                                                    <FaUsers className="text-primary" />
+                                                </div>
+                                            </div>
+                                            <div className="flex-grow-1 ms-3">
+                                                <h6 className="mb-1">New Follower</h6>
+                                                <p className="mb-0 text-muted">John Doe started following you</p>
+                                                <small className="text-muted">2 hours ago</small>
+                                            </div>
+                                        </div>
+
+                                        {/* Activity Item */}
+                                        <div className="d-flex mb-4">
+                                            <div className="flex-shrink-0">
+                                                <div className="avatar avatar-md rounded-circle bg-success bg-opacity-10">
+                                                    <FaComments className="text-success" />
+                                                </div>
+                                            </div>
+                                            <div className="flex-grow-1 ms-3">
+                                                <h6 className="mb-1">New Comment</h6>
+                                                <p className="mb-0 text-muted">Jane Smith commented on your post</p>
+                                                <small className="text-muted">4 hours ago</small>
+                                            </div>
+                                        </div>
+
+                                        {/* Activity Item */}
+                                        <div className="d-flex mb-4">
+                                            <div className="flex-shrink-0">
+                                                <div className="avatar avatar-md rounded-circle bg-warning bg-opacity-10">
+                                                    <FaHeart className="text-warning" />
+                                                </div>
+                                            </div>
+                                            <div className="flex-grow-1 ms-3">
+                                                <h6 className="mb-1">New Like</h6>
+                                                <p className="mb-0 text-muted">Mike Johnson liked your post</p>
+                                                <small className="text-muted">6 hours ago</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Recent Posts */}
+                        <div className="col-lg-4">
+                            <div className="card border-0 shadow-sm">
+                                <div className="card-header bg-transparent border-0">
+                                    <h5 className="card-title mb-0">Recent Posts</h5>
+                                </div>
+                                <div className="card-body">
+                                    <div className="recent-posts">
+                                        {/* Post Item */}
+                                        <div className="d-flex mb-3">
+                                            <img src="assets/images/post/01.jpg" className="rounded" width="60" height="60" alt="Post" />
+                                            <div className="ms-3">
+                                                <h6 className="mb-1">Beautiful Sunset</h6>
+                                                <small className="text-muted">2 hours ago</small>
+                                            </div>
+                                        </div>
+
+                                        {/* Post Item */}
+                                        <div className="d-flex mb-3">
+                                            <img src="assets/images/post/02.jpg" className="rounded" width="60" height="60" alt="Post" />
+                                            <div className="ms-3">
+                                                <h6 className="mb-1">City Life</h6>
+                                                <small className="text-muted">4 hours ago</small>
+                                            </div>
+                                        </div>
+
+                                        {/* Post Item */}
+                                        <div className="d-flex">
+                                            <img src="assets/images/post/03.jpg" className="rounded" width="60" height="60" alt="Post" />
+                                            <div className="ms-3">
+                                                <h6 className="mb-1">Nature Walk</h6>
+                                                <small className="text-muted">6 hours ago</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

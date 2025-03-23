@@ -17,7 +17,8 @@ import ThemeSwitcher from "./components/Layouts/ThemeSwitcher";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CheckOtp from "./components/Home/Auth/CheckOtp.jsx";
 import CheckOtpForgotPassword from "./components/Home/Auth/CheckOtpForgotPassword.jsx";
-
+import AdminLayout from "./components/Admin/Layout/AdminLayout";
+import IndexAdmin from "./components/Admin/Index";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -51,12 +52,25 @@ function App() {
         },
       ],
     },
+    {
+      path: "/dashboard",
+      element: <DashboardLayout />,
+      children: [
+        { path: "info", element: <Info /> },
+        { path: "Messaging", element: <Info /> },
+        { path: "Communication", element: <Info /> },
+        { path: "CloseAccount", element: <Info /> },
+      ]
+    },
     { path: "/forgot-password", element: <ForgotPassword /> },
     { path: "/Login", element: <Login /> },
     { path: "/Register", element: <Register /> },
     { path: "/check-otp/:email", element: <CheckOtp /> },
     { path: "/check-forgot-password/:email", element: <CheckOtpForgotPassword /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
+    { path: '/admin', element: <AdminLayout /> , children : [
+      { path: '', element: <IndexAdmin /> },
+    ]},
   ]);
 
   return (

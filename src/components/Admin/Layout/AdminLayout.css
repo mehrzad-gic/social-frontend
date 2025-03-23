@@ -1,0 +1,274 @@
+/* Admin Dashboard Layout */
+.admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--admin-bg-primary);
+  color: var(--admin-text-primary);
+}
+
+/* Theme Variables */
+.admin-dashboard {
+  --admin-primary: #4f46e5;
+  --admin-secondary: #6b7280;
+  --admin-success: #10b981;
+  --admin-danger: #ef4444;
+  --admin-warning: #f59e0b;
+  --admin-info: #3b82f6;
+  --admin-bg-primary: #ffffff;
+  --admin-bg-secondary: #f9fafb;
+  --admin-bg-hover: #f3f4f6;
+  --admin-text-primary: #1a1a1a;
+  --admin-text-secondary: #4b5563;
+  --admin-border-color: #e5e7eb;
+  --admin-card-bg: #ffffff;
+  --admin-card-border: #e5e7eb;
+  --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard[data-theme="dark"] {
+  --admin-primary: #818cf8;
+  --admin-secondary: #9ca3af;
+  --admin-success: #34d399;
+  --admin-danger: #f87171;
+  --admin-warning: #fbbf24;
+  --admin-info: #60a5fa;
+  --admin-bg-primary: #0a0a0a;
+  --admin-bg-secondary: #111111;
+  --admin-bg-hover: #1a1a1a;
+  --admin-text-primary: #ffffff;
+  --admin-text-secondary: #a0a0a0;
+  --admin-border-color: #1a1a1a;
+  --admin-card-bg: #111111;
+  --admin-card-border: #1a1a1a;
+  --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Text Color Fixes */
+.admin-dashboard .text-muted {
+  color: var(--admin-text-secondary) !important;
+}
+
+.admin-dashboard .card-title {
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .card-subtitle {
+  color: var(--admin-text-secondary);
+}
+
+.admin-dashboard .dropdown-item {
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .dropdown-item.text-muted {
+  color: var(--admin-text-secondary) !important;
+}
+
+.admin-dashboard .notification-item p {
+  color: var(--admin-text-secondary);
+}
+
+.admin-dashboard .notification-item small {
+  color: var(--admin-text-secondary);
+}
+
+.admin-dashboard .recent-posts h6 {
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .recent-posts small {
+  color: var(--admin-text-secondary);
+}
+
+/* Navbar Styles */
+.admin-dashboard .navbar {
+  height: 70px;
+  background-color: var(--admin-bg-primary);
+  border-bottom: 1px solid var(--admin-border-color);
+  transition: all 0.3s ease;
+  padding: 0.75rem 1.5rem;
+}
+
+.admin-dashboard .navbar-scrolled {
+  box-shadow: var(--admin-shadow);
+}
+
+.admin-dashboard .navbar-brand {
+  font-weight: 600;
+  color: var(--admin-text-primary);
+  font-size: 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.admin-dashboard .theme-toggle {
+  color: var(--admin-text-primary);
+  background: none;
+  border: none;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border-radius: 0.5rem;
+}
+
+.admin-dashboard .theme-toggle:hover {
+  color: var(--admin-primary);
+  background-color: var(--admin-bg-hover);
+}
+
+/* Sidebar Styles */
+.admin-dashboard .admin-sidebar {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: var(--admin-bg-secondary);
+  border-right: 1px solid var(--admin-border-color);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.admin-dashboard .admin-sidebar:not(.open) {
+  width: 70px;
+}
+
+.admin-dashboard .admin-sidebar .nav-link {
+  color: var(--admin-text-secondary);
+  padding: 0.875rem 1.25rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  margin: 0.25rem 0.5rem;
+}
+
+.admin-dashboard .admin-sidebar .nav-link:hover,
+.admin-dashboard .admin-sidebar .nav-link.active {
+  color: var(--admin-primary);
+  background-color: var(--admin-bg-hover);
+}
+
+.admin-dashboard .admin-sidebar .nav-link i {
+  width: 20px;
+  text-align: center;
+}
+
+/* Main Content Styles */
+.admin-dashboard .admin-main-content {
+  flex: 1;
+  margin-left: 250px;
+  margin-top: 70px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  background-color: var(--admin-bg-primary);
+  color: var(--admin-text-primary);
+}
+
+.admin-dashboard .admin-main-content:not(.sidebar-open) {
+  margin-left: 70px;
+}
+
+/* Card Styles */
+.admin-dashboard .card {
+  background-color: var(--admin-card-bg);
+  border: 1px solid var(--admin-card-border);
+  box-shadow: var(--admin-shadow);
+  border-radius: 0.75rem;
+}
+
+.admin-dashboard .card-header {
+  background-color: var(--admin-card-bg);
+  border-bottom: 1px solid var(--admin-card-border);
+  padding: 1.25rem;
+}
+
+.admin-dashboard .card-body {
+  padding: 1.25rem;
+}
+
+/* Dropdown Styles */
+.admin-dashboard .dropdown-menu {
+  background-color: var(--admin-card-bg);
+  border: 1px solid var(--admin-card-border);
+  box-shadow: var(--admin-shadow);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.admin-dashboard .dropdown-item {
+  color: var(--admin-text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+}
+
+.admin-dashboard .dropdown-item:hover {
+  background-color: var(--admin-bg-hover);
+  color: var(--admin-primary);
+}
+
+/* Notifications Styles */
+.admin-dashboard .notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.admin-dashboard .notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid var(--admin-border-color);
+  transition: background-color 0.3s ease;
+  border-radius: 0.375rem;
+}
+
+.admin-dashboard .notification-item:hover {
+  background-color: var(--admin-bg-hover);
+}
+
+.admin-dashboard .notification-item.unread {
+  background-color: var(--admin-bg-hover);
+}
+
+/* Avatar Styles */
+.admin-dashboard .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--admin-bg-secondary);
+  color: var(--admin-text-primary);
+}
+
+/* Mobile Responsive */
+@media (max-width: 991.98px) {
+  .admin-dashboard .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .admin-dashboard .admin-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .admin-dashboard .admin-main-content {
+    margin-left: 0;
+  }
+}
+
+/* Scrollbar Styles */
+.admin-dashboard ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.admin-dashboard ::-webkit-scrollbar-track {
+  background: var(--admin-bg-secondary);
+}
+
+.admin-dashboard ::-webkit-scrollbar-thumb {
+  background: var(--admin-border-color);
+  border-radius: 3px;
+}
+
+.admin-dashboard ::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-text-secondary);
+} 
