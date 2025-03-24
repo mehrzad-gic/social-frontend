@@ -72,3 +72,16 @@ export const destroy = (slug,token) => {
     .catch((err) => err);
 
 }   
+
+
+export const getTag = (slug, token) => {
+    return fetch(`${BACKEND_URL}/tags/show/${slug}`,{
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}

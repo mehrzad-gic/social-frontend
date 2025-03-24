@@ -21,7 +21,7 @@ import AdminLayout from "./components/Admin/Layout/AdminLayout";
 import IndexAdmin from "./components/Admin/Index";
 import Tags from "./components/Admin/Tag/List";
 import CreateTag from "./components/Admin/Tag/Create";
-
+import EditTag from "./components/Admin/Tag/Edit";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -90,6 +90,7 @@ function App() {
         { index: true, element: <IndexAdmin /> },
         { path: 'content/tags', element: <Tags /> },
         { path: 'content/tags/create', element: <CreateTag /> },
+        { path: 'content/tags/edit/:slug', element: <EditTag /> },
       ]
     },
 

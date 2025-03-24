@@ -7,7 +7,7 @@ import { create } from '../../../Controllers/TagController';
 import Loading from '../../Home/Ui/Loading';
 import Error from '../../Home/Ui/Error';
 import { useQueryClient } from '@tanstack/react-query';
-
+import { Link } from 'react-router-dom';
 
 const Create = () => {
  
@@ -48,8 +48,11 @@ const Create = () => {
     if(isError) return <Error message={isError} />
 
     return (
-        <div>
-            <h1>Create Tag</h1>
+        <div className='container'>
+            <div className='d-flex justify-content-between align-items-center mb-4'>
+                <h1 className='text-success'>Create Tag</h1>
+                <Link to='/admin/content/tags' className='btn btn-secondary'>Back</Link>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name</label>
