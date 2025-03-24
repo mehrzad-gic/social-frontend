@@ -19,7 +19,7 @@ import CheckOtp from "./components/Home/Auth/CheckOtp.jsx";
 import CheckOtpForgotPassword from "./components/Home/Auth/CheckOtpForgotPassword.jsx";
 import AdminLayout from "./components/Admin/Layout/AdminLayout";
 import IndexAdmin from "./components/Admin/Index";
-import Tags from "./components/Admin/Pages/Tags.jsx";
+import Tags from "./components/Admin/Tag/List";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -86,7 +86,7 @@ function App() {
       element: <AdminLayout />,
       children: [
         { index: true, element: <IndexAdmin /> },
-        { path: 'tags', element: <Tags /> },
+        { path: 'content/tags', element: <Tags /> },
       ]
     },
 

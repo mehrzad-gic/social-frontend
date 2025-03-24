@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { FaHome, FaUser, FaChartBar, FaUsers, FaComments, FaCog, FaSignOutAlt, FaBars, FaTimes, FaBell, FaEnvelope, FaChevronDown, FaChevronRight, FaTachometerAlt, FaUserShield, FaDatabase, FaChartLine, FaCogs, FaUserCircle, FaBellSlash, FaSun, FaMoon } from 'react-icons/fa';
+import { FaHome, FaUser, FaUsers, FaComments, FaCog, FaSignOutAlt, FaBars, FaTimes, FaBell, FaEnvelope, FaChevronDown, FaChevronRight, FaTachometerAlt, FaUserShield, FaDatabase, FaChartLine, FaCogs, FaUserCircle, FaBellSlash, FaSun, FaMoon, FaFileAlt, FaNewspaper, FaCommentDots, FaTags, FaFolder, FaImages, FaFileWord, FaUserPlus, FaUserCog, FaUserLock, FaChartPie, FaChartBar, FaFileArchive, FaWrench, FaShieldAlt, FaEnvelopeOpen, FaKey } from 'react-icons/fa';
 import './AdminLayout.css';
 
 const AdminLayout = () => {
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,55 +57,153 @@ const AdminLayout = () => {
     {
       id: 'dashboard',
       title: 'Dashboard',
-      icon: <FaTachometerAlt />,
+      icon: <FaTachometerAlt className='text-info' />,
       path: '/admin',
       subItems: []
     },
     {
       id: 'users',
       title: 'User Management',
-      icon: <FaUserShield />,
+      icon: <FaUserShield  className='text-success'/>,
       path: '/admin/users',
       subItems: [
-        { title: 'All Users', path: '/admin/users' },
-        { title: 'Add User', path: '/admin/users/add' },
-        { title: 'User Roles', path: '/admin/users/roles' },
-        { title: 'User Permissions', path: '/admin/users/permissions' }
+        { 
+          title: 'All Users', 
+          path: '/admin/users',
+          icon: <FaUsers />
+        },
+        { 
+          title: 'Add User', 
+          path: '/admin/users/add',
+          icon: <FaUserPlus />
+        },
+        { 
+          title: 'User Roles', 
+          path: '/admin/users/roles',
+          icon: <FaUserCog />
+        },
+        { 
+          title: 'User Permissions', 
+          path: '/admin/users/permissions',
+          icon: <FaUserLock/>
+        }
+      ]
+    },
+    {
+      id: 'content',
+      title: 'Content',
+      icon: <FaFileAlt className="text-success"/>,
+      path: '/admin/content',
+      subItems: [
+        { 
+          title: 'Posts', 
+          path: '/admin/content/posts',
+          icon: <FaNewspaper />
+        },
+        { 
+          title: 'Comments', 
+          path: '/admin/content/comments',
+          icon: <FaCommentDots/>
+        },
+        { 
+          title: 'Tags', 
+          path: '/admin/content/tags',
+          icon: <FaTags />
+        },
+        { 
+          title: 'Categories', 
+          path: '/admin/content/categories',
+          icon: <FaFolder />
+        },
+        { 
+          title: 'Media', 
+          path: '/admin/content/media',
+          icon: <FaImages />
+        },
+        { 
+          title: 'Pages', 
+          path: '/admin/content/pages',
+          icon: <FaFileWord />
+        }
       ]
     },
     {
       id: 'analytics',
       title: 'Analytics',
-      icon: <FaChartLine />,
+      icon: <FaChartLine className='text-primary' />,
       path: '/admin/analytics',
       subItems: [
-        { title: 'Overview', path: '/admin/analytics' },
-        { title: 'User Analytics', path: '/admin/analytics/users' },
-        { title: 'Content Analytics', path: '/admin/analytics/content' },
-        { title: 'Reports', path: '/admin/analytics/reports' }
+        { 
+          title: 'Overview', 
+          path: '/admin/analytics',
+          icon: <FaChartPie />
+        },
+        { 
+          title: 'User Analytics', 
+          path: '/admin/analytics/users',
+          icon: <FaChartBar />
+        },
+        { 
+          title: 'Content Analytics', 
+          path: '/admin/analytics/content',
+          icon: <FaFileAlt />
+        },
+        { 
+          title: 'Reports', 
+          path: '/admin/analytics/reports',
+          icon: <FaFileArchive />
+        }
       ]
     },
     {
       id: 'database',
       title: 'Database',
-      icon: <FaDatabase />,
+      icon: <FaDatabase className='text-danger' />,
       path: '/admin/database',
       subItems: [
-        { title: 'Backups', path: '/admin/database/backups' },
-        { title: 'Restore', path: '/admin/database/restore' },
-        { title: 'Optimization', path: '/admin/database/optimize' }
+        { 
+          title: 'Backups', 
+          path: '/admin/database/backups',
+          icon: <FaFileArchive />
+        },
+        { 
+          title: 'Restore', 
+          path: '/admin/database/restore',
+          icon: <FaFileAlt />
+        },
+        { 
+          title: 'Optimization', 
+          path: '/admin/database/optimize',
+          icon: <FaWrench />
+        }
       ]
     },
     {
       id: 'settings',
       title: 'Settings',
-      icon: <FaCogs />,
+      icon: <FaCogs className='text-warning' />,
       path: '/admin/settings',
       subItems: [
-        { title: 'General', path: '/admin/settings' },
-        { title: 'Security', path: '/admin/settings/security' },
-        { title: 'Email', path: '/admin/settings/email' },
-        { title: 'API', path: '/admin/settings/api' }
+        { 
+          title: 'General', 
+          path: '/admin/settings',
+          icon: <FaCog />
+        },
+        { 
+          title: 'Security', 
+          path: '/admin/settings/security',
+          icon: <FaShieldAlt />
+        },
+        { 
+          title: 'Email', 
+          path: '/admin/settings/email',
+          icon: <FaEnvelopeOpen />
+        },
+        { 
+          title: 'API', 
+          path: '/admin/settings/api',
+          icon: <FaKey />
+        }
       ]
     }
   ];
@@ -242,10 +341,11 @@ const AdminLayout = () => {
                         {item.subItems.map((subItem) => (
                           <li className="nav-item" key={subItem.path}>
                             <Link
-                              className={`nav-link py-2 ${location.pathname === subItem.path ? 'active' : ''}`}
+                              className={`nav-link py-2 d-flex align-items-center gap-2 ${location.pathname === subItem.path ? 'active' : ''}`}
                               to={subItem.path}
                               onClick={() => setIsMobileSidebarOpen(false)}
                             >
+                              {subItem.icon}
                               {subItem.title}
                             </Link>
                           </li>

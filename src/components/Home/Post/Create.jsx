@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { all } from "../../../Controllers/TagController";
 import { createPost } from "../../../Controllers/PostController";
 import { getLocalStorage } from "../../../Helpers/Helpers";
 import { toast } from "react-toastify";
-import validationSchema from "../../../validations/PostValidation";
-import { useFormik } from "formik";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Ui/Loading";
 
@@ -12,220 +13,202 @@ import Loading from "../Ui/Loading";
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/gif"];
 
-// Create Post Component
+const schema = yup.object().shape({
+  name: yup.string().required("Title is required"),
+  imgs: yup.array().of(
+    yup.mixed()
+      .test("fileFormat", "Unsupported Format", value => {
+        if (!value) return true;
+        return ALLOWED_FILE_TYPES.includes(value.type);
+      })
+      .test("fileSize", "File too large", value => {
+        if (!value) return true;
+        return value.size <= MAX_FILE_SIZE;
+      })
+  ),
+  text: yup.string().required("Content is required"),
+  tags: yup.array().of(yup.string())
+});
+
 const Create = ({ isLoading }) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-    const [tags, setTags] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const navigate = useNavigate();
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      imgs: [],
+      text: "",
+      tags: []
+    }
+  });
 
-    // Fetch tags on component mount
-    useEffect(() => {
-        const fetchTags = async () => {
-            const token = JSON.parse(localStorage.getItem("user"))?.jwt;
+  // Fetch tags using React Query
+  const { data: tags = [], isLoading: tagsLoading } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      const token = JSON.parse(localStorage.getItem("user"))?.jwt;
+      if (!token) {
+        toast.error("You must be logged in to create a post.");
+        navigate("/login");
+        return [];
+      }
+      const res = await all(token);
+      return res.data || [];
+    },
+    enabled: !isLoading
+  });
 
-            if (!token) {
-                toast.error("You must be logged in to create a post.");
-                navigate("/login");
-                return;
-            }
+  // Create post mutation
+  const createPostMutation = useMutation({
+    mutationFn: async (formData) => {
+      const storage = JSON.parse(getLocalStorage("user"));
+      const jwt = storage.jwt;
+      return createPost(formData, jwt);
+    },
+    onSuccess: () => {
+      toast.success("Post created successfully!");
+      queryClient.invalidateQueries(['posts']); // Invalidate posts query to refetch
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Error creating post:", error);
+      toast.error("An error occurred while creating the post.");
+    }
+  });
 
-            try {
-                const res = await all(token);
-                setTags(res.data || []);
-            } catch (err) {
-                console.error("Error fetching tags:", err);
-                toast.error("Failed to fetch tags. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setValue("imgs", selectedFiles);
+  };
 
-        if (!isLoading) {
-            fetchTags();
-        }
-    }, [isLoading, navigate]);
+  const handleTagChange = (e) => {
+    const { value, checked } = e.target;
+    const currentTags = watch("tags");
+    const newTags = checked
+      ? [...currentTags, value]
+      : currentTags.filter((tag) => tag !== value);
+    setValue("tags", newTags);
+  };
 
-    // Formik setup
-    const formik = useFormik({
-        initialValues: {
-            name: "",
-            imgs: [],
-            text: "",
-            tags: [],
-        },
-        validationSchema,
-        onSubmit: async (values) => {
-            setIsSubmitting(true);
+  const onSubmit = async (data) => {
+    // Validate files
+    if (data.imgs.some((file) => file.size > MAX_FILE_SIZE)) {
+      toast.error("File size must be less than 5MB.");
+      return;
+    }
 
-            // Validate files
-            if (values.imgs.some((file) => file.size > MAX_FILE_SIZE)) {
-                toast.error("File size must be less than 5MB.");
-                setIsSubmitting(false);
-                return;
-            }
+    if (data.imgs.some((file) => !ALLOWED_FILE_TYPES.includes(file.type))) {
+      toast.error("Only JPEG, PNG, and GIF files are allowed.");
+      return;
+    }
 
-            if (values.imgs.some((file) => !ALLOWED_FILE_TYPES.includes(file.type))) {
-                toast.error("Only JPEG, PNG, and GIF files are allowed.");
-                setIsSubmitting(false);
-                return;
-            } 
+    // Prepare form data
+    const formData = new FormData();
+    formData.append("name", data.name);
+    data.imgs.forEach((img) => formData.append("imgs[]", img));
+    formData.append("text", data.text);
+    data.tags.forEach((tag) => formData.append("tags[]", tag));
 
-            // Prepare form data
-            const storage = JSON.parse(getLocalStorage("user"));
-            const data = new FormData();
-            data.append("name", values.name);
-            values.imgs.forEach((img) => data.append("imgs[]", img));
-            data.append("text", values.text);
-            values.tags.forEach((tag) => data.append("tags[]", tag));
+    createPostMutation.mutate(formData);
+  };
 
-            const jwt = storage.jwt;
-            console.log(data);
-            
-            try {
-                const res = await createPost(data, jwt);
-                console.log(res);
-                
-                if (res.success) {
-                    toast.success("Post created successfully!");
-                    navigate("/");
-                } else {
-                    toast.error(res.message || "Failed to create post.");
-                }
-            } catch (error) {
-                console.error("Error creating post:", error);
-                toast.error("An error occurred while creating the post.");
-            } finally {
-                setIsSubmitting(false);
-            }
-        },
-    });
+  if (tagsLoading) return <Loading />;
 
-    // Handle input changes
-    const handleChange = (e) => {
-        const { name, type, value, checked } = e.target;
+  return (
+    <div className="container">
+      <h2 className="mt-5 text-info">Create Article</h2>
+      <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="row">
+          {/* Title */}
+          <div className="col-md-8">
+            <label htmlFor="name" className="mb-2 fs-5">
+              Title :
+            </label>
+            <input
+              type="text"
+              className={`form-control border ${errors.name ? "is-invalid" : ""}`}
+              id="name"
+              {...register("name")}
+            />
+            {errors.name && (
+              <div className="text-danger mt-1">{errors.name.message}</div>
+            )}
+          </div>
 
-        if (type === "file") {
-            const selectedFiles = Array.from(e.target.files);
-            formik.setFieldValue(name, selectedFiles);
-        } else if (name === "tags") {
-            const tags = checked
-                ? [...formik.values.tags, value]
-                : formik.values.tags.filter((tag) => tag !== value);
-            formik.setFieldValue(name, tags);
-        } else {
-            formik.setFieldValue(name, value);
-        }
-    };
+          {/* Images */}
+          <div className="col-md-4">
+            <label htmlFor="imgs" className="mb-2 fs-5">
+              Images :
+            </label>
+            <input
+              type="file"
+              className={`form-control border ${errors.imgs ? "is-invalid" : ""}`}
+              id="imgs"
+              multiple
+              onChange={handleFileChange}
+            />
+            {errors.imgs && (
+              <div className="text-danger mt-1">{errors.imgs.message}</div>
+            )}
+          </div>
 
-    // Show loading spinner while fetching tags
-    if (loading) return <Loading />;
-
-    return (
-        <div className="container">
-            <h2 className="mt-5 text-info">Create Article</h2>
-            <form className="mt-4" onSubmit={formik.handleSubmit}>
-                <div className="row">
-                    {/* Title */}
-                    <div className="col-md-8">
-                        <label htmlFor="name" className="mb-2 fs-5">
-                            Title :
-                        </label>
-                        <input
-                            type="text"
-                            className={`form-control border ${
-                                formik.touched.name && formik.errors.name ? "is-invalid" : ""
-                            }`}
-                            id="name"
-                            name="name"
-                            value={formik.values.name}
-                            onChange={handleChange}
-                            onBlur={formik.handleBlur}
-                        />
-                        {formik.touched.name && formik.errors.name && (
-                            <div className="text-danger mt-1">{formik.errors.name}</div>
-                        )}
-                    </div>
-
-                    {/* Images */}
-                    <div className="col-md-4">
-                        <label htmlFor="imgs" className="mb-2 fs-5">
-                            Images :
-                        </label>
-                        <input
-                            type="file"
-                            className={`form-control border ${
-                                formik.touched.imgs && formik.errors.imgs ? "is-invalid" : ""
-                            }`}
-                            id="imgs"
-                            name="imgs"
-                            multiple
-                            onChange={handleChange}
-                            onBlur={formik.handleBlur}
-                        />
-                        {formik.touched.imgs && formik.errors.imgs && (
-                            <div className="text-danger mt-1">{formik.errors.imgs}</div>
-                        )}
-                    </div>
-
-                    {/* Tags */}
-                    <div className="col-md-12 mt-5">
-                        <label className="fs-5 mb-2">Tags :</label>
-                        <div className="d-flex gap-4">
-                            {tags.map((tag) => (
-                                <div key={tag.id}>
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id={`tag-${tag.id}`}
-                                        name="tags"
-                                        value={tag.id.toString()}
-                                        checked={formik.values.tags.includes(tag.id.toString())}
-                                        onChange={handleChange}
-                                    />
-                                    <label className="ms-1 fs-5" htmlFor={`tag-${tag.id}`}>
-                                        {tag.name}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                        {formik.touched.tags && formik.errors.tags && (
-                            <div className="text-danger mt-1">{formik.errors.tags}</div>
-                        )}
-                    </div>
-
-                    {/* Text */}
-                    <div className="col-md-12 mt-5">
-                        <label htmlFor="text" className="fs-5 mb-2">
-                            Text :
-                        </label>
-                        <textarea
-                            className={`form-control ${
-                                formik.touched.text && formik.errors.text ? "is-invalid" : ""
-                            }`}
-                            name="text"
-                            id="text"
-                            rows={7}
-                            value={formik.values.text}
-                            onChange={handleChange}
-                            onBlur={formik.handleBlur}
-                        ></textarea>
-                        {formik.touched.text && formik.errors.text && (
-                            <div className="text-danger mt-1">{formik.errors.text}</div>
-                        )}
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="mt-3">
-                        <button type="submit" className="btn btn-info" disabled={isSubmitting}>
-                            {isSubmitting ? "Creating..." : "Create"}
-                        </button>
-                    </div>
+          {/* Tags */}
+          <div className="col-md-12 mt-5">
+            <label className="fs-5 mb-2">Tags :</label>
+            <div className="d-flex gap-4">
+              {tags.map((tag) => (
+                <div key={tag.id}>
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={`tag-${tag.id}`}
+                    value={tag.id.toString()}
+                    checked={watch("tags").includes(tag.id.toString())}
+                    onChange={handleTagChange}
+                  />
+                  <label className="ms-1 fs-5" htmlFor={`tag-${tag.id}`}>
+                    {tag.name}
+                  </label>
                 </div>
-            </form>
+              ))}
+            </div>
+            {errors.tags && (
+              <div className="text-danger mt-1">{errors.tags.message}</div>
+            )}
+          </div>
+
+          {/* Text */}
+          <div className="col-md-12 mt-5">
+            <label htmlFor="text" className="fs-5 mb-2">
+              Text :
+            </label>
+            <textarea
+              className={`form-control ${errors.text ? "is-invalid" : ""}`}
+              id="text"
+              rows={7}
+              {...register("text")}
+            />
+            {errors.text && (
+              <div className="text-danger mt-1">{errors.text.message}</div>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <div className="mt-3">
+            <button 
+              type="submit" 
+              className="btn btn-info" 
+              disabled={createPostMutation.isPending}
+            >
+              {createPostMutation.isPending ? "Creating..." : "Create"}
+            </button>
+          </div>
         </div>
-    );
+      </form>
+    </div>
+  );
 };
 
 export default Create;
