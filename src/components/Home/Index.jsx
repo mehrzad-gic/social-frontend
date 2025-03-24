@@ -36,7 +36,6 @@ const Index = () => {
     queryFn: async ({ pageParam = 1 }) => {
       
       const token = JSON.parse(localStorage.getItem("user"))?.jwt;
-      console.log(token);
       const res = await all(token, pageParam);
       
       console.log(res);
