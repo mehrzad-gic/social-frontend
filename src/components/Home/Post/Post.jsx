@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { addPostComment, postComments, savePost } from "../../../Controllers/PostController";
 import Comment from "../Comment/Comment";
@@ -29,9 +29,9 @@ const Post = ({ value, like, setPosts }) => {
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
   
-  const toggleReplies = (commentId) => {
+  const toggleReplies = useCallback((commentId) => {
     setVisibleReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
-  };
+  }, []);
 
   useEffect(() => {
     if (value && value.id) {
@@ -41,27 +41,42 @@ const Post = ({ value, like, setPosts }) => {
     }
   }, [value]);
 
-  const loadComments = () => {
+  const loadComments = useCallback(() => {
+    const token = JSON.parse(localStorage.getItem("user"))?.jwt;
+    if (!token || !currentPost) return;
 
-    const token = JSON.parse(localStorage.getItem("user")).jwt;
     setLoading(true);
 
-    postComments(token, currentPost, commentPage + 1).then((res) => {
-      if (res?.data?.comments.length === 0) {
-        toast.error('Nothing to show anymore!');
-      } else {
-        setComments((prevComments) => [...prevComments, ...res.data.comments]);
-        setCommentLikes((prevLikes) => [...prevLikes, ...res.data.comment_likes]);
+    postComments(token, currentPost, commentPage + 1)
+      .then((res) => {
+        console.log(res);
+        
+        if (!res?.success) {
+          toast.error(res?.message || 'Failed to load comments');
+          return;
+        }
+
+        if (!res.comments || res.comments.length === 0) {
+          toast.error('Nothing to show anymore!');
+          return;
+        }
+
+        setComments((prevComments) => [...prevComments, ...res.comments]);
+        if (res.comment_likes) {
+          setCommentLikes((prevLikes) => [...prevLikes, ...res.comment_likes]);
+        }
         setCommentPage((prevPage) => prevPage + 1);
-      }
-    }).finally(() => {
-      setLoading(false);
-    });
-    
-  };
+      })
+      .catch((error) => {
+        toast.error('Failed to load comments');
+        console.error('Error loading comments:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [currentPost, commentPage, setCommentLikes]);
 
   const addComment = async (e) => {
-
     e.preventDefault();
     setLoading(true);
     const text = commentText.trim();
@@ -74,10 +89,9 @@ const Post = ({ value, like, setPosts }) => {
     }
 
     const token = JSON.parse(localStorage.getItem("user"))?.jwt;
-    const id = value.id;
 
     try {
-      const res = await addPostComment(token, body, value.id);
+      const res = await addPostComment(token, body, currentPost);
       
       if (res.success) {
         queryClient.setQueryData(['posts'], (oldData) => ({
@@ -94,14 +108,16 @@ const Post = ({ value, like, setPosts }) => {
             )
           }))
         }));
-        // setComments(prevComments => [...prevComments, res.comment]);
+        // if (res.comment) {
+        //   setComments(prevComments => [...prevComments, res.comment]);
+        // }
         setCommentText("");
         toast.success("Comment Created Successfully");
       } else {
-        toast.error(res.error);
+        toast.error(res.message || "Failed to create comment");
       }
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e.message || "Failed to create comment");
     } finally {
       setLoading(false);
     }
@@ -109,7 +125,7 @@ const Post = ({ value, like, setPosts }) => {
 
   const likePostComment = async (commentId) => {
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("user")).value.jwt;
+    const token = JSON.parse(localStorage.getItem("user"))?.jwt;
 
     try {
       const result = await likeComment(commentId, token);
@@ -126,7 +142,7 @@ const Post = ({ value, like, setPosts }) => {
         );
         toast.success(result.type === "decrement" ? "Comment unliked successfully!" : "Comment liked successfully!");
       } else {
-        toast.error(result.error);
+        toast.error(result.message || "Failed to like/unlike comment");
       }
     } catch (error) {
       toast.error("An error occurred while liking/unliking the comment.");
@@ -357,14 +373,13 @@ const Post = ({ value, like, setPosts }) => {
             to="#!"
             role="button"
             className="btn btn-link btn-link-loader btn-sm text-secondary d-flex align-items-center"
-            onClick={loadComments}
           >
             {loading ? (
               <div className="spinner-border me-2" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
             ) : (
-              <span className="me-2 btn btn-sm btn-outline-info">Load { comments.length > 0 ? "more" : "" } comments</span>
+              <span onClick={loadComments} className="me-2 btn btn-sm btn-outline-info">Load { comments.length > 0 ? "more" : "" } comments</span>
             )}
           </Link>
         </div>

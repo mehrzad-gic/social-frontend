@@ -12,8 +12,8 @@ const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commen
                     <Link to="#!">
                         <img
                             className="avatar-img rounded-circle"
-                            src={comment.user.img ? `${BACKEND_ROUTE}/${comment.user.img}` : 'assets/images/avatar/placeholder.jpg'}
-                            alt={comment.user.name}
+                            src={comment.User.img ? `${BACKEND_ROUTE}/${comment.User.img}` : 'assets/images/avatar/placeholder.jpg'}
+                            alt={comment.User.name}
                         />
                     </Link>
                 </div>
@@ -21,7 +21,7 @@ const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commen
                     <div className="bg-light rounded-start-top-0 p-3 rounded">
                         <div className="d-flex justify-content-between">
                             <h6 className="mb-1">
-                                <Link to="#!">{comment.user.name}</Link>
+                                <Link to="#!">{comment.User.name}</Link>
                             </h6>
                             <small className="ms-2">{comment.updated_at}</small>
                         </div>
