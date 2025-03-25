@@ -27,7 +27,7 @@ const Post = ({ value, like, setPosts }) => {
   const [visibleReplies, setVisibleReplies] = useState({});
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
-
+  
   const toggleReplies = (commentId) => {
     setVisibleReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
@@ -60,6 +60,7 @@ const Post = ({ value, like, setPosts }) => {
   };
 
   const addComment = async (e) => {
+
     e.preventDefault();
     setLoading(true);
     const text = commentText.trim();
@@ -71,11 +72,13 @@ const Post = ({ value, like, setPosts }) => {
       return;
     }
 
-    const token = JSON.parse(localStorage.getItem("user"))?.value?.jwt;
+    const token = JSON.parse(localStorage.getItem("user"))?.jwt;
     const id = value.id;
 
     try {
-      const res = await addPostComment(token, body, id);
+      const res = await addPostComment(token, body, value.id);
+      console.log(res);
+      
       if (res.success) {
         setPosts((prevPosts) =>
           prevPosts.map((post) =>

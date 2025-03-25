@@ -89,7 +89,7 @@ export const all = (token,page = 1) => {
 
 export const addPostComment = async (token, body, id) => { 
 
-    const response = await fetch(`${BACKEND_URL}/post-addComment/${id}`, { // Corrected URL construction  
+    const response = await fetch(`${BACKEND_URL}/comments/create/?id=${id}&model=posts`, { // Corrected URL construction  
         method: "POST",  
         headers: {  
             'Content-Type': 'application/json',  // It is a good practice to set content type for JSON payload  
@@ -111,7 +111,7 @@ export const addPostComment = async (token, body, id) => {
 
 export const postComments = (token,id,page = 1) => {
 
-    return fetch(`${BACKEND_URL}/post-comments/${id}/?page=${page}`,{
+    return fetch(`${BACKEND_URL}/post-comments/${22}/?page=${page}`,{
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
