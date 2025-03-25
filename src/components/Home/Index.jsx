@@ -41,14 +41,15 @@ const Index = () => {
       console.log(res);
 
       if (res.success) {
+        
         setPostLikes(res.likedPosts);
+        
         setPostSaves(res.savedPosts);
         
-        if(res.token && res.token !== token) {
-          setLocalStorage("user", res.token, 21, res.user);
-        }
+        if(res.token && res.token !== token) setLocalStorage("user", res.token, 21, res.user);
         
         return res;
+
       } else {
 
         if(server_auth_errors.includes(res.message)) {
@@ -60,6 +61,7 @@ const Index = () => {
         throw new Error(res.error || "Failed to fetch posts");
     
       }
+
     },
     getNextPageParam: (lastPage, pages) => {
       return lastPage.posts.length > 0 ? pages.length + 1 : undefined;
@@ -107,6 +109,7 @@ const Index = () => {
             ? "Post unliked successfully!"
             : "Post liked successfully!"
         );
+        
       } else {
         toast.error(result.error);
       }

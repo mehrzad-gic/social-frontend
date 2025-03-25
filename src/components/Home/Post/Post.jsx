@@ -11,6 +11,7 @@ import AnswerText from "../Comment/AnswerText";
 import Slider from "react-slick"; // Import Slider
 import "slick-carousel/slick/slick.css"; // Import Slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import Slick Theme CSS
+import { useQueryClient } from "@tanstack/react-query";
 
 const Post = ({ value, like, setPosts }) => {
 
@@ -23,7 +24,7 @@ const Post = ({ value, like, setPosts }) => {
   const [loading, setLoading] = useState(false);
   const {postSaves,setPostSaves } = useContext(SavesContext);
   const {postLikes,commentLikes,setCommentLikes,setPostLikes } = useContext(LikesContext);
-
+  const queryClient = useQueryClient();
   const [visibleReplies, setVisibleReplies] = useState({});
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
@@ -77,16 +78,25 @@ const Post = ({ value, like, setPosts }) => {
 
     try {
       const res = await addPostComment(token, body, value.id);
-      console.log(res);
       
       if (res.success) {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === id ? { ...post, comments_count: post.comments_count + 1 } : post
-          )
-        );
-        toast.success("Comment Created Successfully");
+        queryClient.setQueryData(['posts'], (oldData) => ({
+          ...oldData,
+          pages: oldData.pages.map(page => ({
+            ...page,
+            posts: page.posts.map(post =>
+              post.id === value.id
+                ? {
+                    ...post,
+                    comments_count: post.comments_count + 1,
+                  }
+                : post
+            )
+          }))
+        }));
+        // setComments(prevComments => [...prevComments, res.comment]);
         setCommentText("");
+        toast.success("Comment Created Successfully");
       } else {
         toast.error(res.error);
       }
@@ -314,6 +324,7 @@ const Post = ({ value, like, setPosts }) => {
               placeholder="Add a comment..."
             />
             <button
+              disabled={loading}
               type="submit"
               className="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
             >
@@ -353,7 +364,7 @@ const Post = ({ value, like, setPosts }) => {
                 <span className="visually-hidden">Loading...</span>
               </div>
             ) : (
-              <span className="me-2">Load more comments</span>
+              <span className="me-2 btn btn-sm btn-outline-info">Load { comments.length > 0 ? "more" : "" } comments</span>
             )}
           </Link>
         </div>

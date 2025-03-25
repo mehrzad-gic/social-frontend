@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commentLikes, likePostComment, scrollToCommentForm }) => {
+    
     // Check if the comment is liked by the user  
     const isLiked = commentLikes.includes(comment.id);
 
