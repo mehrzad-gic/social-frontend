@@ -21,7 +21,7 @@ export const likePost = async (id, token) => {
 
     try {  
         
-        const response = await fetch(`${BACKEND_URL}/like-post/${id}`, {  
+        const response = await fetch(`${BACKEND_URL}/posts/like/${id}`, {  
             method: "POST",  
             headers: {  
                 'Content-Type': 'application/json', // Ensure the content type is set to JSON  

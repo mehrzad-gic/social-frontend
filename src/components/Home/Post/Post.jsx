@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
-import { addPostComment, postComments, savePost } from "../../../Controllers/PostController";
+import { addPostComment, postComments, savePost,likePost } from "../../../Controllers/PostController";
 import Comment from "../Comment/Comment";
 import LikesContext from "../../../Context/LikesContext";
 import SavesContext from "../../../Context/SavesContext";
@@ -11,13 +11,12 @@ import AnswerText from "../Comment/AnswerText";
 import Slider from "react-slick"; // Import Slider
 import "slick-carousel/slick/slick.css"; // Import Slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import Slick Theme CSS
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const Post = ({ value, like, setPosts }) => {
-
+const Post = ({ value, setPosts }) => {
+  
   const [rep, setRep] = useState(null);
   const [commentText, setCommentText] = useState("");
-  const [currentPost, setCurrentPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentPage, setCommentPage] = useState(0);
 
@@ -33,21 +32,13 @@ const Post = ({ value, like, setPosts }) => {
     setVisibleReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   }, []);
 
-  useEffect(() => {
-    if (value && value.id) {
-      setCurrentPost(value.id);
-      console.log(value);
-      
-    }
-  }, [value]);
-
   const loadComments = useCallback(() => {
     const token = JSON.parse(localStorage.getItem("user"))?.jwt;
-    if (!token || !currentPost) return;
+    if (!token || !value) return;
 
     setLoading(true);
 
-    postComments(token, currentPost, commentPage + 1)
+    postComments(token, value.id, commentPage + 1)
       .then((res) => {
         console.log(res);
         
@@ -74,7 +65,7 @@ const Post = ({ value, like, setPosts }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPost, commentPage, setCommentLikes]);
+  }, [value, commentPage, setCommentLikes]);
 
   const addComment = async (e) => {
     e.preventDefault();
@@ -91,7 +82,7 @@ const Post = ({ value, like, setPosts }) => {
     const token = JSON.parse(localStorage.getItem("user"))?.jwt;
 
     try {
-      const res = await addPostComment(token, body, currentPost);
+      const res = await addPostComment(token, body, value.id);
       
       if (res.success) {
         queryClient.setQueryData(['posts'], (oldData) => ({
@@ -108,9 +99,9 @@ const Post = ({ value, like, setPosts }) => {
             )
           }))
         }));
-        // if (res.comment) {
-        //   setComments(prevComments => [...prevComments, res.comment]);
-        // }
+        if (res.comment) {
+          setComments(prevComments => [...prevComments, res.comment]);
+        }
         setCommentText("");
         toast.success("Comment Created Successfully");
       } else {
@@ -171,6 +162,58 @@ const Post = ({ value, like, setPosts }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+
+  // Like post mutation
+  const likeMutation = useMutation({
+    mutationFn: async (postId) => {
+      const token = JSON.parse(localStorage.getItem("user")).jwt;
+      return await likePost(postId, token);
+    },
+    onSuccess: (result, postId) => {
+      if (result.success) {
+        queryClient.setQueryData(['posts'], (oldData) => ({
+          ...oldData,
+          pages: oldData.pages.map(page => ({
+            ...page,
+            posts: page.posts.map(post =>
+              post.id === postId
+                ? {
+                    ...post,
+                    likes: result.type === "decrement" ? post.likes - 1 : post.likes + 1,
+                  }
+                : post
+            )
+          }))
+        }));
+
+        setPostLikes((prev) => {
+          if (result.type === "increment") {
+            return [...prev, postId];
+          } else {
+            return prev.filter((id) => id !== postId);
+          }
+        });
+
+        toast.success(
+          result.type === "decrement"
+            ? "Post unliked successfully!"
+            : "Post liked successfully!"
+        );
+        
+      } else {
+        toast.error(result.error);
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("An error occurred while liking/unliking the post.");
+    }
+  });
+
+  const like = () => {
+    likeMutation.mutate(value.id);
   };
 
   const scrollToCommentForm = (id) => {
@@ -252,7 +295,7 @@ const Post = ({ value, like, setPosts }) => {
       </div>
       {/* Card body */}
       <div className="card-body">
-        <h5 className="text-gray">{value.title}</h5>
+        <h5 className="text-gray">{value.name}</h5>
         <p className="mt-3">{value.text}</p>
 
         {/* Image Slider */}
@@ -280,7 +323,7 @@ const Post = ({ value, like, setPosts }) => {
 
         {/* Feed react */}
         <ul className="nav nav-stack py-3 small">
-          <li className="nav-item" onClick={() => like(value.id)}>
+          <li className="nav-item" onClick={like}>
             <Link
               className={`nav-link ${postLikes.includes(value.id) ? "active" : ""}`}
               to="#!"

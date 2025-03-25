@@ -9,10 +9,10 @@ export const auth_403 = "dear user please login first";
 
 
 export const server_auth_errors = [
-    "User-NotFound-In-Token",
     "Token-Expired",
     "Invalid-Token",
     "Token-Not-Found",
+    "User-Not-Found-In-Token",
     "Token-Not-Valid",
     "Authorization-Header-Missing",
     "Token-Missing",

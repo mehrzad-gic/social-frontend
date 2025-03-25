@@ -73,59 +73,8 @@ const Index = () => {
     retry: 1, // Only retry once 
   });
 
-  // Like post mutation
-  const likeMutation = useMutation({
-    mutationFn: async (postId) => {
-      const token = JSON.parse(localStorage.getItem("user")).jwt;
-      return await likePost(postId, token);
-    },
-    onSuccess: (result, postId) => {
-      if (result.success) {
-        queryClient.setQueryData(['posts'], (oldData) => ({
-          ...oldData,
-          pages: oldData.pages.map(page => ({
-            ...page,
-            posts: page.posts.map(post =>
-              post.id === postId
-                ? {
-                    ...post,
-                    likes: result.type === "decrement" ? post.likes - 1 : post.likes + 1,
-                  }
-                : post
-            )
-          }))
-        }));
-
-        setPostLikes((prev) => {
-          if (result.type === "increment") {
-            return [...prev, postId];
-          } else {
-            return prev.filter((id) => id !== postId);
-          }
-        });
-
-        toast.success(
-          result.type === "decrement"
-            ? "Post unliked successfully!"
-            : "Post liked successfully!"
-        );
-        
-      } else {
-        toast.error(result.error);
-      }
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("An error occurred while liking/unliking the post.");
-    }
-  });
-
   const loadMore = () => {
     fetchNextPage();
-  };
-
-  const like = (id) => {
-    likeMutation.mutate(id);
   };
 
   const allPosts = data?.pages.flatMap(page => page.posts) ?? [];
@@ -148,7 +97,7 @@ const Index = () => {
                   <ShareFeed />
                   {allPosts.length > 0 ? (
                     allPosts.map((value, index) => (
-                      <Post key={index} value={value} like={like} />
+                      <Post key={index} value={value} />
                     ))
                   ) : (
                     <div>No posts available</div>

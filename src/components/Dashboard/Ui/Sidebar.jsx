@@ -7,14 +7,11 @@ import { BACKEND_ROUTE } from "../../../Controllers/Config";
 const Sidebar = () => {
 
     const [user,setUser] = useState({});
+    const storage = JSON.parse(localStorage.getItem('user'));
 
-    useEffect(() => {  
-
-        const storage = JSON.parse(localStorage.getItem('user'));
-        
+    useEffect(() => {          
         setUser(storage.value.user)
-
-    }, []); 
+    }, [storage]); 
 
 
     return (
