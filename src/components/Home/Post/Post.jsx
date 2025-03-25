@@ -149,11 +149,13 @@ const Post = ({ value, setPosts }) => {
 
     try {
       const result = await savePost(postId, token);
+      
       if (result.success) {
+        // set post saves
         setPostSaves((prevSaves) => 
-          result.type === 'saved' ? [...prevSaves, postId] : prevSaves.filter(id => id !== postId)
+          result.type === 'increment' ? [...prevSaves, postId] : prevSaves.filter(id => id !== postId)
         );
-        toast.success(result.type === 'saved' ? "Post saved successfully!" : "Post unsaved successfully!");
+        toast.success(result.type === 'increment' ? "Post saved successfully!" : "Post unsaved successfully!");
       } else {
         toast.error(result.error);
       }
@@ -275,6 +277,13 @@ const Post = ({ value, setPosts }) => {
             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
               <li>
                 <Link className="dropdown-item" to="#" onClick={save}>
+                  {loading ? (
+                    <div className="spinner-border spinner-border-sm" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  ) : (
+                    <>
+
                   {postSaves && postSaves.includes(value.id) ? (
                     <>
                       <i className="bi bi-bookmark-fill fa-fw pe-2"></i>
@@ -284,6 +293,8 @@ const Post = ({ value, setPosts }) => {
                     <>
                       <i className="bi bi-bookmark fa-fw pe-2"></i>
                       Save post
+                    </>
+                      )}
                     </>
                   )}
                 </Link>

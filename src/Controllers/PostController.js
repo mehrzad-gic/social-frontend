@@ -49,7 +49,7 @@ export const savePost = async (id, token) => {
 
     try {  
         
-        const response = await fetch(`${BACKEND_URL}/save-post/${id}`, {  
+        const response = await fetch(`${BACKEND_URL}/posts/save/${id}`, {  
             method: "POST",  
             headers: {  
                 'Content-Type': 'application/json', // Ensure the content type is set to JSON  
