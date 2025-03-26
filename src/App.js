@@ -22,6 +22,10 @@ import IndexAdmin from "./components/Admin/Index";
 import Tags from "./components/Admin/Tag/List";
 import CreateTag from "./components/Admin/Tag/Create";
 import EditTag from "./components/Admin/Tag/Edit";
+import Jobs from "./components/Home/Jobs/Jobs";
+import JobDetail from "./components/Home/Jobs/JobDetail";
+import CreateJob from "./components/Home/Jobs/CreateJob";
+import MyApplications from "./components/Home/Jobs/MyApplications";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -42,6 +46,10 @@ function App() {
       children: [
         { path: "/", element: <Index /> },
         { path: "/create-post", element: <Create /> },
+        { path: "/jobs", element: <Jobs /> },
+        { path: "/jobs/:slug", element: <JobDetail /> },
+        { path: "/jobs/create", element: <CreateJob /> },
+        { path: "/jobs/applications", element: <MyApplications /> },
         { path: "*", element: <NotFound /> },
         {
           path: "dashboard",
