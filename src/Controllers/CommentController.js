@@ -5,7 +5,7 @@ export const likeComment = async (id, token) => {
 
     try {  
         
-        const response = await fetch(`${BACKEND_URL}/like-comment/${id}`, {  
+        const response = await fetch(`${BACKEND_URL}/comments/like/${id}`, {  
             method: "POST",  
             headers: {  
                 'Content-Type': 'application/json', // Ensure the content type is set to JSON  

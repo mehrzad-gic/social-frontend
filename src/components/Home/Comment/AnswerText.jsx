@@ -1,6 +1,7 @@
 import React from 'react';  
 
 const AnswerText = ({ rep, setRep, realCommentForm }) => {  
+    
     const cancel = () => {  
         realCommentForm.current.blur();  
         setRep(null);  

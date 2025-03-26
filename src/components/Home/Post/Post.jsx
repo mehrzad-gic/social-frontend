@@ -70,8 +70,8 @@ const Post = ({ value, setPosts }) => {
   const addComment = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const text = commentText.trim();
-    const body = { text, parent_comment_id: rep || null };
+    const text = commentText.trim();    
+    const body = { text, parent_id: rep || null };
 
     if (text.length < 1) {
       toast.error("Comment Text is Required");
@@ -83,7 +83,7 @@ const Post = ({ value, setPosts }) => {
 
     try {
       const res = await addPostComment(token, body, value.id);
-      
+      console.log(res);
       if (res.success) {
         queryClient.setQueryData(['posts'], (oldData) => ({
           ...oldData,
@@ -115,6 +115,7 @@ const Post = ({ value, setPosts }) => {
   };
 
   const likePostComment = async (commentId) => {
+    
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("user"))?.jwt;
 
@@ -219,8 +220,12 @@ const Post = ({ value, setPosts }) => {
   };
 
   const scrollToCommentForm = (id) => {
-    commentForm.current.scrollIntoView({ behavior: "smooth" });
-    realCommentForm.current.focus();
+    if (commentForm.current) {
+      commentForm.current.scrollIntoView({ behavior: "smooth" });
+    }
+    if (realCommentForm.current) {
+      realCommentForm.current.focus();
+    }
     setRep(id);
   };
 
@@ -372,35 +377,37 @@ const Post = ({ value, setPosts }) => {
           </li>
         </ul>
 
-        {/* Add comment */}
-        <AnswerText rep={rep} setRep={setRep} realCommentForm={realCommentForm} />
+        {/* Add comment section with ref */}
+        <div ref={commentForm}>
+          <AnswerText rep={rep} setRep={setRep} realCommentForm={realCommentForm} />
 
-        <div className="d-flex mb-3">
-          <div className="avatar avatar-xs me-2">
-            <Link to="#!">
-              <img
-                className="avatar-img rounded-circle"
-                src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
-                alt=""
+          <div className="d-flex mb-3">
+            <div className="avatar avatar-xs me-2">
+              <Link to="#!">
+                <img
+                  className="avatar-img rounded-circle"
+                  src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
+                  alt=""
+                />
+              </Link>
+            </div>
+            <form className="nav nav-item w-100 position-relative" id="comment-form" onSubmit={addComment}>
+              <textarea
+                className="form-control pe-5 bg-light"
+                ref={realCommentForm}
+                rows="3"
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Add a comment..."
               />
-            </Link>
+              <button
+                disabled={loading}
+                type="submit"
+                className="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
+              >
+                <i className="bi bi-send-fill"></i>
+              </button>
+            </form>
           </div>
-          <form className="nav nav-item w-100 position-relative" id="comment-form" onSubmit={addComment}>
-            <textarea
-              className="form-control pe-5 bg-light"
-              ref={realCommentForm}
-              rows="3"
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Add a comment..."
-            />
-            <button
-              disabled={loading}
-              type="submit"
-              className="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0"
-            >
-              <i className="bi bi-send-fill"></i>
-            </button>
-          </form>
         </div>
 
         {comments.length > 0 && (
@@ -442,6 +449,7 @@ const Post = ({ value, setPosts }) => {
       )}
     </div>
   );
+
 };
 
 export default Post;
