@@ -111,7 +111,7 @@ export const addPostComment = async (token, body, id) => {
 
 export const postComments = (token,id,page = 1) => {
 
-    return fetch(`${BACKEND_URL}/comments/?id=${id}&page=${page}&model=posts`,{
+    return fetch(`${BACKEND_URL}/comments/?id=${id}&page=${page}&model=posts&parent_id=0`,{
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

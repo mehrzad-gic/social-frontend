@@ -39,9 +39,11 @@ const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commen
                                     <span className="nav-link" style={{ cursor: 'pointer' }} onClick={() => scrollToCommentForm(comment.id)}>Reply</span>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="#!" onClick={() => toggleReplies(comment.id)}>
-                                        View {Array.isArray(comment.replies) ? comment.replies.length : 0} replies
-                                    </Link>
+                                    {comment.replies.length > 0 && ( 
+                                        <Link className="nav-link" to="#!" onClick={() => toggleReplies(comment.id)}>
+                                            View {comment.replies.length} replies
+                                        </Link>
+                                    )}
                                 </li>
                             </>
                         )}

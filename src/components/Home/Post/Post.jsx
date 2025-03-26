@@ -83,8 +83,9 @@ const Post = ({ value, setPosts }) => {
 
     try {
       const res = await addPostComment(token, body, value.id);
-      console.log(res);
+      
       if (res.success) {
+        // Update posts count in the cache
         queryClient.setQueryData(['posts'], (oldData) => ({
           ...oldData,
           pages: oldData.pages.map(page => ({
@@ -99,10 +100,62 @@ const Post = ({ value, setPosts }) => {
             )
           }))
         }));
+
+        // Add the new comment to the comments list
         if (res.comment) {
-          setComments(prevComments => [...prevComments, res.comment]);
+          const newComment = {
+            ...res.comment,
+            User: {
+              id: JSON.parse(localStorage.getItem("user")).user.id,
+              name: JSON.parse(localStorage.getItem("user")).user.name,
+              img: JSON.parse(localStorage.getItem("user")).user.img,
+              title: JSON.parse(localStorage.getItem("user")).user.title
+            },
+          };
+
+          console.log(newComment, "newComment");
+
+          setComments(prevComments => {
+            if (rep) {
+              // Handle reply
+              return prevComments.map(comment => {
+                if (comment.id === rep) {
+                  return {
+                    ...comment,
+                    replies: [...(comment.replies || []), newComment]
+                  };
+                }
+                // Also check in replies
+                if (comment.replies) {
+                  const updatedReplies = comment.replies.map(reply => {
+                    if (reply.id === rep) {
+                      return {
+                        ...reply,
+                        replies: [...(reply.replies || []), newComment]
+                      };
+                    }
+                    return reply;
+                  });
+                  return { ...comment, replies: updatedReplies };
+                }
+                return comment;
+              });
+            }
+            // Handle new comment
+            return [newComment, ...prevComments];
+          });
+
+          // If it's a reply, show the replies section
+          if (rep) {
+            setVisibleReplies(prev => ({
+              ...prev,
+              [rep]: true
+            }));
+          }
         }
+
         setCommentText("");
+        setRep(null); // Reset reply state
         toast.success("Comment Created Successfully");
       } else {
         toast.error(res.message || "Failed to create comment");
