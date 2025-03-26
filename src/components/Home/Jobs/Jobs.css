@@ -1,0 +1,282 @@
+.jobs-container {
+  min-height: 100vh;
+  background-color: #f3f2f1;
+}
+
+.jobs-header {
+  background-color: #fff;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.resume-upload-banner {
+  background-color: #f3f2f1;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.search-section .input-group {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-section .input-group-text {
+  border: none;
+  padding: 0.75rem 1rem;
+}
+
+.search-section .form-control {
+  border: none;
+  padding: 0.75rem 1rem;
+}
+
+.search-section .form-control:focus {
+  box-shadow: none;
+}
+
+.quick-filters .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.quick-filters .btn.active {
+  background-color: #0a66c2;
+  color: white;
+}
+
+.job-list-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.job-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #0a66c2;
+}
+
+.job-card.selected {
+  border-color: #0a66c2;
+  background-color: #f8f9fa;
+}
+
+.company-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.job-meta .badge {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.job-details-sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.job-details-sidebar .card {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.job-requirements li,
+.job-benefits li {
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .job-details-sidebar {
+    position: static;
+    margin-top: 2rem;
+  }
+
+  .search-section .input-group {
+    flex-direction: column;
+  }
+
+  .search-section .input-group > * {
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .quick-filters {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.5rem;
+  }
+
+  .quick-filters .btn {
+    white-space: nowrap;
+  }
+}
+
+/* Loading States */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.job-card {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #e0e0e0;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+.company-logo {
+  border: 1px solid #e0e0e0;
+  padding: 4px;
+}
+
+.company-name {
+  font-size: 0.95rem;
+}
+
+.location {
+  font-size: 0.9rem;
+}
+
+.benefits {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Filter buttons */
+.btn-filter {
+  font-size: 0.9rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+}
+
+.btn-filter.active {
+  background-color: #0a66c2;
+  color: white;
+  border-color: #0a66c2;
+}
+
+/* Search inputs */
+.search-input {
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  padding: 8px 12px;
+}
+
+.search-input:focus {
+  border-color: #0a66c2;
+  box-shadow: 0 0 0 1px #0a66c2;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* Easy Apply badge */
+.badge.bg-success {
+  background-color: #057642 !important;
+  font-weight: normal;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+/* Action buttons */
+.btn-outline-secondary {
+  border-color: #e0e0e0;
+  color: #666;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+  color: #444;
+}
+
+/* Quick apply footer */
+.card-footer {
+  border-top: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+}
+
+/* Navigation tabs */
+.nav-link {
+  color: #666;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+}
+
+.nav-link.active {
+  color: #0a66c2;
+  font-weight: 600;
+  border-bottom: 2px solid #0a66c2;
+}
+
+/* Upload resume banner */
+.upload-banner {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
+}
+
+.upload-banner .text-success {
+  color: #057642 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .job-card .company-logo {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .filter-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .filter-buttons::-webkit-scrollbar {
+    display: none;
+  }
+} 

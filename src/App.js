@@ -26,6 +26,9 @@ import Jobs from "./components/Home/Jobs/Jobs";
 import JobDetail from "./components/Home/Jobs/JobDetail";
 import CreateJob from "./components/Home/Jobs/CreateJob";
 import MyApplications from "./components/Home/Jobs/MyApplications";
+import Categories from "./components/Admin/Category/List";
+import CreateCategory from "./components/Admin/Category/Create";
+import EditCategory from "./components/Admin/Category/Edit";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -96,9 +99,16 @@ function App() {
       element: <AdminLayout />,
       children: [
         { index: true, element: <IndexAdmin /> },
+
+        // Tag Routes
         { path: 'content/tags', element: <Tags /> },
         { path: 'content/tags/create', element: <CreateTag /> },
         { path: 'content/tags/edit/:slug', element: <EditTag /> },
+
+        // Category Routes
+        { path: 'content/categories', element: <Categories /> },
+        { path: 'content/categories/create', element: <CreateCategory /> },
+        { path: 'content/categories/edit/:slug', element: <EditCategory /> },
       ]
     },
 
