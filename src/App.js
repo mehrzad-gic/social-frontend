@@ -109,6 +109,26 @@ function App() {
         { path: 'content/categories', element: <Categories /> },
         { path: 'content/categories/create', element: <CreateCategory /> },
         { path: 'content/categories/edit/:slug', element: <EditCategory /> },
+
+        // Report Routes
+        { path: 'content/reports' , element: <Reports/> },
+        { path: 'content/reports/create' , element: <CreateReport/>},
+        { path: 'content/reports/edit/:slug' , element: <EditReport/>},
+
+        // Reject Routes
+        { path: 'content/rejects' , element: <Rejects/> },
+        { path: 'content/rejects/create' , element: <CreateReject/>},
+        { path: 'content/rejects/edit/:slug' , element: <EditReportReject/>},
+
+        // FaqCategory Routes
+        { path: 'content/faq-categories', element: <FaqCategories /> },
+        { path: 'content/faq-categories/create', element: <CreateFaqCategory /> },
+        { path: 'content/faq-categories/edit/:slug', element: <EditFaqCategory /> },
+
+        // faqs Routes
+        { path: 'content/faqs', element: <Faqs /> },
+        { path: 'content/faqs/create', element: <CreateFaq /> },
+        { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
       ]
     },
 
