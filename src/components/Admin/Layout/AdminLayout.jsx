@@ -121,6 +121,11 @@ const AdminLayout = () => {
           icon: <FaReact />
         },
         { 
+          title: 'Rejects', 
+          path: '/admin/content/rejects',
+          icon: <FaReact />
+        },
+        { 
           title: 'Media', 
           path: '/admin/content/media',
           icon: <FaImages />

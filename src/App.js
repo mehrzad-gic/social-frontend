@@ -32,6 +32,9 @@ import EditCategory from "./components/Admin/Category/Edit";
 import Reports from "./components/Admin/Report/List";
 import CreateReport from "./components/Admin/Report/Create.jsx";
 import EditReport from "./components/Admin/Report/Edit.jsx";
+import Rejects from "./components/Admin/Reject/List";
+import CreateReject from "./components/Admin/Reject/Create.jsx"
+import EditReject from "./components/Admin/Reject/Edit.jsx"
 
 
 const queryClient = new QueryClient({
@@ -120,10 +123,10 @@ function App() {
         { path: 'content/reports/edit/:slug' , element: <EditReport/>},
 
 
-        // // Reject Routes
-        // { path: 'content/rejects' , element: <Rejects/> },
-        // { path: 'content/rejects/create' , element: <CreateReject/>},
-        // { path: 'content/rejects/edit/:slug' , element: <EditReportReject/>},
+        // Reject Routes
+        { path: 'content/rejects' , element: <Rejects/> },
+        { path: 'content/rejects/create' , element: <CreateReject/>},
+        { path: 'content/rejects/edit/:slug' , element: <EditReject/>},
 
         // // FaqCategory Routes
         // { path: 'content/faq-categories', element: <FaqCategories /> },

@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaTags } from 'react-icons/fa';
-import { create } from '../../../Controllers/TagController';
+import { create } from '../../../Controllers/RejectController';
 import Loading from '../../Home/Ui/Loading';
 import Error from '../../Home/Ui/Error';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import ErrorMessages from '../../Home/Ui/ErrorMessages';
 
 const Create = () => {
  
@@ -25,12 +26,15 @@ const Create = () => {
 
             setIsLoading(true);
             const token = JSON.parse(localStorage.getItem('user')).jwt;
+            console.log(data);
+            
             const response = await create(data,token);
+            console.log(response);
             
             if(response.success) {
-                toast.success('Tag created successfully');
-                queryClient.invalidateQueries({queryKey: ['tags']});
-                navigate('/admin/content/tags');
+                toast.success('reject created successfully');
+                queryClient.invalidateQueries({queryKey: ['rejects']});
+                navigate('/admin/content/rejects');
             } else {
                 setIsError(response.message);
             }
@@ -45,19 +49,27 @@ const Create = () => {
     }
 
     if(isLoading) return <Loading />
-    if(isError) return <Error message={isError} />
 
     return (
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
-                <h1 className='text-success'>Create Tag</h1>
+                <h1 className='text-success'>Create Reject</h1>
                 <Link to='/admin/content/tags' className='btn btn-secondary'>Back</Link>
             </div>
+            {isError && <ErrorMessages message={isError} />}
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="mb-3">
+                <div className="mt-3">
                     <label htmlFor="name" className="form-label">Name</label>
                     <input type="text" className="form-control" {...register('name', {required: 'Name is required'})} />
                     {errors.name && <span className="text-danger">{errors.name.message}</span>}
+                </div>
+                <div className="mt-3">
+                    <label htmlFor="type" className='form-label'>Type </label>
+                    <select name="type"  {...register('type', {required: 'Status is required', valueAsNumber: true})} className='form-select' id="type">
+                        <option value={0}>Project</option>
+                        <option value={1}>Job</option>
+                        <option value={2}>Group</option>
+                    </select>
                 </div>
                 <div className='mt-3'>
                     <label htmlFor="status" className="form-label">Status</label>

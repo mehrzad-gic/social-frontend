@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import Loading from '../../Home/Ui/Loading';
 import Error from '../../Home/Ui/Error';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { update, getTag } from '../../../Controllers/TagController';
+import { update, show } from '../../../Controllers/RejectController.js';
 import { Link } from 'react-router-dom';
 
 
@@ -15,8 +15,8 @@ const Edit = () => {
     const token = JSON.parse(localStorage.getItem('user'))?.jwt;
     
     const {data, isLoading, isError} = useQuery({
-        queryKey: ['tag', slug],
-        queryFn: () => getTag(slug, token)
+        queryKey: ['reject', slug],
+        queryFn: () => show(slug, token)
     });
 
     console.log(data);
@@ -32,9 +32,9 @@ const Edit = () => {
 
             if(response.success) {
                 toast.success(response.message);
-                queryClient.invalidateQueries({queryKey: ['tags']});
-                queryClient.invalidateQueries({queryKey: ['tag', slug]});
-                navigate('/admin/content/tags');
+                queryClient.invalidateQueries({queryKey: ['rejects']});
+                queryClient.invalidateQueries({queryKey: ['reject', slug]});
+                navigate('/admin/content/rejects');
             } else {
                 toast.error(response.message);
             }
@@ -52,20 +52,28 @@ const Edit = () => {
     return (
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
-                <h1 className='text-success'>Edit Tag <span className='text-warning'>{`:/${data?.data?.name}`}</span></h1>
-                <Link to='/admin/content/tags' className='btn btn-secondary'>Back</Link>
+                <h1 className='text-success'>Edit reject <span className='text-warning'>{`:/${data?.reject?.name}`}</span></h1>
+                <Link to='/admin/content/rejects' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name</label>
-                    <input defaultValue={data?.data?.name} type="text" className="form-control" {...register('name', {required: 'Name is required'})} />
+                    <input defaultValue={data?.reject?.name} type="text" className="form-control" {...register('name', {required: 'Name is required'})} />
                     {errors.name && <span className="text-danger">{errors.name.message}</span>}
+                </div>
+                <div className="mt-3">
+                    <label htmlFor="type" className='form-label'>Type </label>
+                    <select name="type"  {...register('type', {required: 'Status is required', valueAsNumber: true})} className='form-select' id="type">
+                        <option selected={data?.reject?.type === 0} value={0}>Project</option>
+                        <option selected={data?.reject?.type === 1} value={1}>Job</option>
+                        <option selected={data?.reject?.type === 2} value={2}>Group</option>
+                    </select>
                 </div>
                 <div className='mt-3'>
                     <label htmlFor="status" className="form-label">Status</label>
                     <select name='status' className='form-control' {...register('status', {required: 'Status is required', valueAsNumber: true})}>
-                        <option selected={data?.data?.status === 1} value={1}>Active</option>
-                        <option selected={data?.data?.status === 0} value={0}>Inactive</option>
+                        <option selected={data?.reject?.status === 1} value={1}>Active</option>
+                        <option selected={data?.reject?.status === 0} value={0}>Inactive</option>
                     </select>
                     {errors.status && <span className="text-danger">{errors.status.message}</span>}
                 </div>
