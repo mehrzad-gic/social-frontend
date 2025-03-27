@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaTags } from 'react-icons/fa';
-import { create } from '../../../Controllers/ReportController';
+import { create } from '../../../Controllers/CategoryController.js';
 import Loading from '../../Home/Ui/Loading';
 import Error from '../../Home/Ui/Error';
 import { useQueryClient } from '@tanstack/react-query';
@@ -26,12 +25,11 @@ const Create = () => {
             setIsLoading(true);
             const token = JSON.parse(localStorage.getItem('user')).jwt;
             const response = await create(data,token);
-            console.log(response);
             
             if(response.success) {
-                toast.success('Report created successfully');
-                queryClient.invalidateQueries({queryKey: ['reports']});
-                navigate('/admin/content/reports');
+                toast.success('Category created successfully');
+                queryClient.invalidateQueries({queryKey: ['categories']});
+                navigate('/admin/content/categories');
             } else {
                 setIsError(response.message);
             }
@@ -51,8 +49,8 @@ const Create = () => {
     return (
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
-                <h1 className='text-success'>Create Report</h1>
-                <Link to='/admin/content/tags' className='btn btn-secondary'>Back</Link>
+                <h1 className='text-success'>Create Category</h1>
+                <Link to='/admin/content/categories' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
@@ -61,9 +59,9 @@ const Create = () => {
                     {errors.name && <span className="text-danger">{errors.name.message}</span>}
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Rete</label>
-                    <input type="number" className="form-control" {...register('rate', {required: 'rate is required', valueAsNumber: true})} />
-                    {errors.rate && <span className="text-danger">{errors.rate.message}</span>}
+                    <label htmlFor="icon" className="form-label">Icon</label>
+                    <input defaultValue={'bi bi-person'} type="text" className="form-control" {...register('icon', {required: 'Icon is required'})} />
+                    {errors.icon && <span className="text-danger">{errors.icon.message}</span>}
                 </div>
                 <div className='mt-3'>
                     <label htmlFor="status" className="form-label">Status</label>

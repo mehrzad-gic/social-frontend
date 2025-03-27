@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { FaHome, FaUser, FaUsers, FaComments, FaCog, FaSignOutAlt, FaBars, FaTimes, FaBell, FaEnvelope, FaChevronDown, FaChevronRight, FaTachometerAlt, FaUserShield, FaDatabase, FaChartLine, FaCogs, FaUserCircle, FaBellSlash, FaSun, FaMoon, FaFileAlt, FaNewspaper, FaCommentDots, FaTags, FaFolder, FaImages, FaFileWord, FaUserPlus, FaUserCog, FaUserLock, FaChartPie, FaChartBar, FaFileArchive, FaWrench, FaShieldAlt, FaEnvelopeOpen, FaKey } from 'react-icons/fa';
+import { FaHome, FaUser, FaUsers, FaComments, FaCog, FaSignOutAlt, FaBars, FaTimes, FaBell, FaEnvelope, FaChevronDown, FaChevronRight, FaTachometerAlt, FaUserShield, FaDatabase, FaChartLine, FaCogs, FaUserCircle, FaBellSlash, FaSun, FaMoon, FaFileAlt, FaNewspaper, FaCommentDots, FaTags, FaFolder, FaImages, FaFileWord, FaUserPlus, FaUserCog, FaUserLock, FaChartPie, FaChartBar, FaFileArchive, FaWrench, FaShieldAlt, FaEnvelopeOpen, FaKey, FaWatchmanMonitoring, FaReact } from 'react-icons/fa';
 import './AdminLayout.css';
 
 const AdminLayout = () => {
@@ -114,6 +114,11 @@ const AdminLayout = () => {
           title: 'Categories', 
           path: '/admin/content/categories',
           icon: <FaFolder />
+        },
+        { 
+          title: 'Reports', 
+          path: '/admin/content/reports',
+          icon: <FaReact />
         },
         { 
           title: 'Media', 

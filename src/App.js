@@ -29,6 +29,10 @@ import MyApplications from "./components/Home/Jobs/MyApplications";
 import Categories from "./components/Admin/Category/List";
 import CreateCategory from "./components/Admin/Category/Create";
 import EditCategory from "./components/Admin/Category/Edit";
+import Reports from "./components/Admin/Report/List";
+import CreateReport from "./components/Admin/Report/Create.jsx";
+import EditReport from "./components/Admin/Report/Edit.jsx";
+
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -115,20 +119,21 @@ function App() {
         { path: 'content/reports/create' , element: <CreateReport/>},
         { path: 'content/reports/edit/:slug' , element: <EditReport/>},
 
-        // Reject Routes
-        { path: 'content/rejects' , element: <Rejects/> },
-        { path: 'content/rejects/create' , element: <CreateReject/>},
-        { path: 'content/rejects/edit/:slug' , element: <EditReportReject/>},
 
-        // FaqCategory Routes
-        { path: 'content/faq-categories', element: <FaqCategories /> },
-        { path: 'content/faq-categories/create', element: <CreateFaqCategory /> },
-        { path: 'content/faq-categories/edit/:slug', element: <EditFaqCategory /> },
+        // // Reject Routes
+        // { path: 'content/rejects' , element: <Rejects/> },
+        // { path: 'content/rejects/create' , element: <CreateReject/>},
+        // { path: 'content/rejects/edit/:slug' , element: <EditReportReject/>},
 
-        // faqs Routes
-        { path: 'content/faqs', element: <Faqs /> },
-        { path: 'content/faqs/create', element: <CreateFaq /> },
-        { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
+        // // FaqCategory Routes
+        // { path: 'content/faq-categories', element: <FaqCategories /> },
+        // { path: 'content/faq-categories/create', element: <CreateFaqCategory /> },
+        // { path: 'content/faq-categories/edit/:slug', element: <EditFaqCategory /> },
+
+        // // faqs Routes
+        // { path: 'content/faqs', element: <Faqs /> },
+        // { path: 'content/faqs/create', element: <CreateFaq /> },
+        // { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
       ]
     },
 
