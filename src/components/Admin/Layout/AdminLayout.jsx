@@ -116,6 +116,16 @@ const AdminLayout = () => {
           icon: <FaFolder />
         },
         { 
+          title: 'Media', 
+          path: '/admin/content/media',
+          icon: <FaImages />
+        },
+        { 
+          title: 'Pages', 
+          path: '/admin/content/pages',
+          icon: <FaFileWord />
+        },
+        { 
           title: 'Reports', 
           path: '/admin/content/reports',
           icon: <FaReact />
@@ -125,15 +135,10 @@ const AdminLayout = () => {
           path: '/admin/content/rejects',
           icon: <FaReact />
         },
-        { 
-          title: 'Media', 
-          path: '/admin/content/media',
-          icon: <FaImages />
-        },
-        { 
-          title: 'Pages', 
-          path: '/admin/content/pages',
-          icon: <FaFileWord />
+        {
+          title: 'FaqCategory', 
+          path: '/admin/content/faq-categories',
+          icon: <FaReact />
         }
       ]
     },
