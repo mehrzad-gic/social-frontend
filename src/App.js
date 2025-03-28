@@ -38,6 +38,9 @@ import EditReject from "./components/Admin/Reject/Edit.jsx"
 import FaqCategories from "./components/Admin/FaqCategory/List.jsx";
 import CreateFaqCategory from "./components/Admin/FaqCategory/Create.jsx";
 import EditFaqCategory from "./components/Admin/FaqCategory/Edit.jsx";
+import Faqs from "./components/Admin/Faq/List";
+import CreateFaq from "./components/Admin/Faq/Create";
+import EditFaq from "./components/Admin/Faq/Edit";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -135,11 +138,16 @@ function App() {
         { path: 'content/faq-categories/create', element: <CreateFaqCategory /> },
         { path: 'content/faq-categories/edit/:slug', element: <EditFaqCategory /> },
 
-        // // faqs Routes
-        // { path: 'content/faqs', element: <Faqs /> },
-        // { path: 'content/faqs/create', element: <CreateFaq /> },
-        // { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
+        // Faq Routes
+        { path: 'content/faqs', element: <Faqs /> },
+        { path: 'content/faqs/create', element: <CreateFaq /> },
+        { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
+
+        // Posts Routes
+        
+
       ]
+
     },
 
   ]);

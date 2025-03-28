@@ -139,6 +139,11 @@ const AdminLayout = () => {
           title: 'FaqCategory', 
           path: '/admin/content/faq-categories',
           icon: <FaReact />
+        },
+        {
+          title: 'Faq', 
+          path: '/admin/content/faqs',
+          icon: <FaReact />
         }
       ]
     },
