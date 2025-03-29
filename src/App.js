@@ -41,6 +41,9 @@ import EditFaqCategory from "./components/Admin/FaqCategory/Edit.jsx";
 import Faqs from "./components/Admin/Faq/List";
 import CreateFaq from "./components/Admin/Faq/Create";
 import EditFaq from "./components/Admin/Faq/Edit";
+import CategoryPrices from "./components/Admin/CategoryPrice/List.jsx";
+import CreateCategoryPrice from "./components/Admin/CategoryPrice/Create.jsx";
+import EditCategoryPrice from "./components/Admin/CategoryPrice/Edit.jsx";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -122,6 +125,11 @@ function App() {
         { path: 'content/categories/create', element: <CreateCategory /> },
         { path: 'content/categories/edit/:slug', element: <EditCategory /> },
 
+        // CategoryPrice Routes
+        { path: 'content/category-prices/:category', element: <CategoryPrices /> },
+        { path: 'content/category-prices/create/:category', element: <CreateCategoryPrice /> },
+        { path: 'content/category-prices/edit/:category/:id', element: <EditCategoryPrice /> }, // Fix route parameters
+
         // Report Routes
         { path: 'content/reports' , element: <Reports/> },
         { path: 'content/reports/create' , element: <CreateReport/>},
@@ -142,6 +150,10 @@ function App() {
         { path: 'content/faqs', element: <Faqs /> },
         { path: 'content/faqs/create', element: <CreateFaq /> },
         { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
+
+        // some routes
+        
+
 
         // Posts Routes
         

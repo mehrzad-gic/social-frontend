@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate ,Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { show, update } from '../../../Controllers/FaqController';
@@ -48,14 +48,17 @@ const Edit = () => {
 
     return (
         <div className="container">
-            <h1 className="text-success">Edit FAQ <span className='text-warning'>{`:/${data.faq?.name}`}</span></h1>
+            <div className='d-flex justify-content-between align-items-center mb-4'>
+                <h1 className="text-success mb-3">Edit FAQ</h1>
+                <Link to='/admin/content/faqs' className='btn btn-secondary'>Back</Link>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="question" className="form-label">Question</label>
                     <input
                         type="text"
                         className="form-control form-control-sm"
-                        defaultValue={data.faq?.name}
+                        defaultValue={data?.faq?.name}
                         id="question"
                         {...register('name', { required: 'Question is required' })}
                     />
@@ -66,7 +69,7 @@ const Edit = () => {
                     <textarea
                         className="form-control form-control-sm"
                         id="answer"
-                        defaultValue={data.faq?.answer}
+                        defaultValue={data?.faq?.answer}
                         {...register('answer', { required: 'Answer is required' })}
                     />
                     {errors.answer && <span className="text-danger">{errors.answer.message}</span>}
@@ -76,12 +79,12 @@ const Edit = () => {
                     <select
                         className="form-select"
                         id="category_id"
-                        defaultValue={data.faq?.category_id || ''}
+                        defaultValue={data?.faq?.category_id || ''}
                         {...register('category_id', { required: 'Category is required' })}
                     >
                         <option value="">Select a category</option>
                         {faqCategories?.faqCategories?.map((category) => (
-                            <option selected={data.faq.category_id == category.id ? true : false} key={category.id} value={category.id}>
+                            <option key={category.id} value={category.id}>
                                 {category.name}
                             </option>
                         ))}
@@ -93,11 +96,11 @@ const Edit = () => {
                     <select
                         className="form-select"
                         id="status"
-                        defaultValue={data.faq?.status || ''}
+                        defaultValue={data?.faq?.status || ''}
                         {...register('status', { required: 'Status is required' })}
                     >
-                        <option selected={data.faq.status == 1 ? true : false} value="1">Active</option>
-                        <option selected={data.faq.status == 0 ? true : false} value="0">Inactive</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
                     </select>
                     {errors.status && <span className="text-danger">{errors.status.message}</span>}
                 </div>

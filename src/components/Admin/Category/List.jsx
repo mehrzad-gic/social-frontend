@@ -90,7 +90,11 @@ const List = () => {
                             <td>{category.id || index + 1}</td>
                             <td>{category.name || 'N/A'}</td>
                             <td><i className={category.icon || ''}></i></td>
-                            <td>{category.slug || 'N/A'}</td>
+                            <td>
+                                <Link to={`/admin/content/categories/view/${category.slug}`} className="underline text-decoration-none" style={{color: '#007bff'}}>
+                                {category.slug || 'N/A'}
+                                </Link>
+                            </td>
                             <td onClick={() => handleChangeStatus(category.slug)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
                                 {category.status == 1 
                                 ? <span className="badge bg-success">Active</span>
@@ -107,6 +111,10 @@ const List = () => {
                                 >
                                     Delete ❌
                                 </button>
+                                <Link to={`/admin/content/category-prices/${category.slug}`} className="btn btn-sm btn-secondary">
+                                    {/* This button will take to Category Price List */}
+                                    Prices 💰
+                                </Link>                                 
                             </td>
                         </tr>
                     ))}

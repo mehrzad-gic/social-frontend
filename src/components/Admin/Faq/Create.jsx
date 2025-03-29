@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { create } from '../../../Controllers/FaqController';
@@ -41,7 +41,10 @@ const Create = () => {
 
     return (
         <div className="container">
-            <h1 className="text-success mb-3">Create FAQ</h1>
+            <div className='d-flex justify-content-between align-items-center mb-4'>
+                <h1 className="text-success mb-3">Create FAQ</h1>
+                <Link to='/admin/content/faqs' className='btn btn-secondary'>Back</Link>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="question" className="form-label">Question</label>
