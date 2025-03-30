@@ -6,16 +6,7 @@ import { BACKEND_ROUTE } from "../../../Controllers/Config";
 // Index Sidebar
 const Sidebar = () => {
 
-    const [user,setUser] = useState({});
-
-    useEffect(() => {  
-
-        const storage = JSON.parse(localStorage.getItem('user'));
-        
-        if(storage) setUser(storage.user)
-
-    }, []); 
-
+    const user = JSON.parse(localStorage.getItem('user'))?.user || {}; // Get user from local storage or default to empty object
 
     return (
 

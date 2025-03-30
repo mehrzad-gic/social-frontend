@@ -45,6 +45,7 @@ const schema = yup.object({
 });
 
 const Info = () => {
+    
     const { user, token } = useOutletContext();
     const [activeTab, setActiveTab] = React.useState('overview');
     const queryClient = useQueryClient();

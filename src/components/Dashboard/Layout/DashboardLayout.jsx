@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../Home/Ui/Sidebar";
+import Sidebar from "../../Home/Ui/Sidebar";
 import { useEffect, useState } from "react";
 
 // DashboardLayout
@@ -9,9 +9,9 @@ const DashboardLayout = () => {
 
     useEffect(() => {
 
-        const userDto = JSON.parse(localStorage.getItem('user'));
+        const userDto = JSON.parse(localStorage.getItem('user'))?.user;
 
-        setUser(userDto.value.user);        
+        setUser(userDto);        
         
     },[]);
 

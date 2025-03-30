@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ThemeSwitcher from "../../Layouts/ThemeSwitcher";
+import ThemeSwitcher from "../../Common/ThemeSwitcher";
 import { logoutUser } from "../../../Controllers/AuthController";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
