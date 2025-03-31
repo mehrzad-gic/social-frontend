@@ -22,7 +22,7 @@ const schema = yup.object({
     img: yup.mixed().nullable()
         .test("fileFormat", "Unsupported Format", value => {
             if (!value) return true;
-            return ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(value.type);
+            return ["image/jpeg", "image/png", "image/webp", "image/jpg", "image/gif"].includes(value.type);
         })
         .test("fileSize", "File too large", value => {
             if (!value) return true;
@@ -31,7 +31,7 @@ const schema = yup.object({
     img_bg: yup.mixed().nullable()
         .test("fileFormat", "Unsupported Format", value => {
             if (!value) return true;
-            return ["image/jpeg", "image/png", "image/jpg", "image/gif"].includes(value.type);
+            return ["image/jpeg", "image/png", "image/webp", "image/jpg", "image/gif"].includes(value.type);
         })
         .test("fileSize", "File too large", value => {
             if (!value) return true;
@@ -47,33 +47,8 @@ const Info = () => {
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
-        defaultValues: {
-            name: user.name || '',
-            title: user.title || '',
-            slug: user.slug || '',
-            bio: user.bio || '',
-            birthday: user.birthday || '',
-            github: user.github || '',
-            x: user.x || '',
-            img: null,
-            img_bg: null,
-        }
     });
 
-    // Update form values when user data changes
-    useEffect(() => {
-        if (user) {
-            setValue("name", user.name || '');
-            setValue("title", user.title || '');
-            setValue("slug", user.slug || '');
-            setValue("bio", user.bio || '');
-            setValue("birthday", user.birthday || '');
-            setValue("github", user.github || '');
-            setValue("x", user.x || '');
-            setValue("img", null);
-            setValue("img_bg", null);
-        }
-    }, [user, setValue]);
 
     // Update info mutation
     const updateInfoMutation = useMutation({
@@ -136,6 +111,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Name</label>
                                         <input
+                                            defaultValue={user.name}
                                             type="text"
                                             className={`form-control ${errors.name ? "is-invalid" : ""}`}
                                             {...register("name")}
@@ -148,6 +124,7 @@ const Info = () => {
                                         <label className="form-label">Username</label>
                                         <input
                                             type="text"
+                                            defaultValue={user.slug}
                                             className={`form-control ${errors.slug ? "is-invalid" : ""}`}
                                             {...register("slug")}
                                         />
@@ -158,6 +135,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Title</label>
                                         <input
+                                            defaultValue={user.title}
                                             type="text"
                                             className={`form-control ${errors.title ? "is-invalid" : ""}`}
                                             {...register("title")}
@@ -169,6 +147,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Birthday</label>
                                         <input
+                                            defaultValue={user.birthday}
                                             type="date"
                                             className={`form-control ${errors.birthday ? "is-invalid" : ""}`}
                                             {...register("birthday")}
@@ -180,6 +159,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">GitHub</label>
                                         <input
+                                            defaultValue={user.github}
                                             type="text"
                                             className={`form-control ${errors.github ? "is-invalid" : ""}`}
                                             {...register("github")}
@@ -191,6 +171,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">X (Twitter)</label>
                                         <input
+                                            defaultValue={user.x}
                                             type="text"
                                             className={`form-control ${errors.x ? "is-invalid" : ""}`}
                                             {...register("x")}
@@ -205,7 +186,9 @@ const Info = () => {
                                             className={`form-control ${errors.bio ? "is-invalid" : ""}`}
                                             rows="3"
                                             {...register("bio")}
-                                        />
+                                        >
+                                            {user.bio}
+                                        </textarea>
                                         {errors.bio && (
                                             <div className="invalid-feedback">{errors.bio.message}</div>
                                         )}
@@ -217,6 +200,9 @@ const Info = () => {
                                             className={`form-control ${errors.img ? "is-invalid" : ""}`}
                                             onChange={(e) => handleFileChange(e, "img")}
                                         />
+                                        {user.img && (
+                                            <img src={`${JSON.parse(user.img).url}`} alt="Profile" className="img-fluid rounded-circle" />
+                                        )}
                                         {errors.img && (
                                             <div className="invalid-feedback">{errors.img.message}</div>
                                         )}
@@ -228,6 +214,9 @@ const Info = () => {
                                             className={`form-control ${errors.img_bg ? "is-invalid" : ""}`}
                                             onChange={(e) => handleFileChange(e, "img_bg")}
                                         />
+                                        {user.img_bg && (
+                                            <img src={`${JSON.parse(user.img_bg).url}`} alt="Profile" className="img-fluid rounded-circle" />
+                                        )}
                                         {errors.img_bg && (
                                             <div className="invalid-feedback">{errors.img_bg.message}</div>
                                         )}

@@ -1,8 +1,8 @@
 import { BACKEND_URL } from "./Config";
 
-export const updateInfo = async (params, token) => {
+export const updateInfo = async (params, slug, token) => {
     try {
-        const response = await fetch(`${BACKEND_URL}/dashboard/update-info`, {
+        const response = await fetch(`${BACKEND_URL}/users/update/${slug}`, {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`,
