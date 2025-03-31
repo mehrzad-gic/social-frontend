@@ -4,7 +4,8 @@ const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commen
      
     // Check if the comment is liked by the user  
     const isLiked = commentLikes.includes(comment.id);
-
+    const userImg = JSON.parse(comment.User.img)[0];
+    
     return (
         <li key={comment.id} className="comment-item mt-3">
             <div className="d-flex position-relative">
@@ -12,7 +13,7 @@ const Comment = ({ comment, BACKEND_ROUTE, toggleReplies, visibleReplies, commen
                     <Link to="#!">
                         <img
                             className="avatar-img rounded-circle"
-                            src={comment.User.img ? `${BACKEND_ROUTE}/${comment.User.img}` : 'assets/images/avatar/placeholder.jpg'}
+                            src={userImg.secure_url ? `${userImg.secure_url}` : 'assets/images/avatar/placeholder.jpg'}
                             alt={comment.User.name}
                         />
                     </Link>
