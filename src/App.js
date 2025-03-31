@@ -153,6 +153,7 @@ function App() {
 
         // some routes
         
+        
 
 
         // Posts Routes
@@ -180,11 +181,11 @@ function App() {
       />
       <ThemeSwitcher />
       <QueryClientProvider client={queryClient}>
-        <LikesProvider>
-          <SavesProvider>
-            <RouterProvider router={router} />
-          </SavesProvider>
-        </LikesProvider>
+          <LikesProvider>
+            <SavesProvider>
+              <RouterProvider router={router} />
+            </SavesProvider>
+          </LikesProvider>
       </QueryClientProvider>
     </>
   );

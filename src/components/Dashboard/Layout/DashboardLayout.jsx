@@ -5,25 +5,19 @@ import { useEffect, useState } from "react";
 // DashboardLayout
 const DashboardLayout = () => {
 
-    const [user,setUser] = useState({});
-
-    useEffect(() => {
-
-        const userDto = JSON.parse(localStorage.getItem('user'))?.user;
-
-        setUser(userDto);        
-        
-    },[]);
+    const storage = JSON.parse(localStorage.getItem('user'));
+    const user = storage?.user;
+    const token = storage?.token;
 
     return(
         <>
         <main>
             <div className="container">
-                <div className="row mt-4 mb-4">
+                <div className="row mt-5 mb-4">
                     <Sidebar/>
                     <div className="col-md-6 vstack gap-3">
                         <div className="tab-content py-0 mb-0">
-                        <Outlet context={{user }} /> {/* Pass isLoading to Outlet context */}
+                        <Outlet context={{user,token}} /> {/* Pass isLoading to Outlet context */}
                         </div>
                     </div>
                 </div>

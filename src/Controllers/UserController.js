@@ -30,3 +30,22 @@ export const checkSlugUnique = async (slug, email) => {
     
     return data.isUnique; // Assume the response contains an `isUnique` boolean
 };
+
+export const show = async (slug,token) => {
+
+    return fetch(`${BACKEND_URL}/users/show/${slug}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    }.then((res) => {
+        if (!res.ok) {
+            throw new Error('Failed to fetch user data');
+        }
+        return res.json();
+    }).catch((err) => {
+        console.error(err);
+        throw err; // Rethrow error for handling in the component
+    }));
+
+}

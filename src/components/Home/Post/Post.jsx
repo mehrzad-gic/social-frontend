@@ -27,6 +27,7 @@ const Post = ({ value, setPosts }) => {
   const [visibleReplies, setVisibleReplies] = useState({});
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
+  const [isAnyCommentLiked, setIsAnyCommentLiked] = useState(false);
   
   const toggleReplies = useCallback((commentId) => {
     setVisibleReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
@@ -52,10 +53,15 @@ const Post = ({ value, setPosts }) => {
           return;
         }
 
-        setComments((prevComments) => [...prevComments, ...res.comments]);
+        // Check if any comment is already in the comments array
+        const newComments = res.comments.filter(comment => !comments.some(c => c.id === comment.id));
+
+        setComments((prevComments) => [...prevComments, ...newComments]);
         if (res.comment_likes) {
           setCommentLikes((prevLikes) => [...prevLikes, ...res.comment_likes]);
         }
+
+        // Increment the comment page
         setCommentPage((prevPage) => prevPage + 1);
       })
       .catch((error) => {
@@ -85,7 +91,8 @@ const Post = ({ value, setPosts }) => {
       const res = await addPostComment(token, body, value.id);
       
       if (res.success) {
-        // Update posts count in the cache
+
+        // Update posts comments count in the cache
         queryClient.setQueryData(['posts'], (oldData) => ({
           ...oldData,
           pages: oldData.pages.map(page => ({
@@ -154,9 +161,12 @@ const Post = ({ value, setPosts }) => {
           }
         }
 
+        setIsAnyCommentLiked(true);
+
         setCommentText("");
         setRep(null); // Reset reply state
         toast.success("Comment Created Successfully");
+        
       } else {
         toast.error(res.message || "Failed to create comment");
       }
@@ -481,7 +491,7 @@ const Post = ({ value, setPosts }) => {
         )}
       </div>
       {/* Card footer */}
-      {value.comments_count > 0 ? (
+      {value.comments_count > 0  || isAnyCommentLiked ? (
         <div className="card-footer border-0 pt-0">
           <Link
             to="#!"

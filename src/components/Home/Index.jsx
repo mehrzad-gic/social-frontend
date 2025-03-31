@@ -47,7 +47,9 @@ const Index = () => {
         setPostSaves(res.savedPosts);
         
         if(res.token && res.token !== token) setLocalStorage("user", res.token, 21, res.user);
+        console.log(res);
         
+
         return res;
 
       } else {
