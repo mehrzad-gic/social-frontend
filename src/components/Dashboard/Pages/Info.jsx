@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";  
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateInfo } from "../../../Controllers/UserController";
+import { updateInfo, uploadImage } from "../../../Controllers/UserController";
 import { Link } from "react-router-dom";
 import { FaUsers, FaComments, FaHeart, FaBookmark, FaChartLine, FaBell, FaCog } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -17,8 +16,8 @@ const schema = yup.object({
     title: yup.string().max(255).nullable(),
     bio: yup.string().nullable(),
     birthday: yup.date().nullable(),
-    x: yup.string().nullable(),
-    github: yup.string().max(255).nullable(),
+    x: yup.string().url().nullable(),
+    github: yup.string().url().nullable(),
     img: yup.mixed().nullable()
         .test("fileFormat", "Unsupported Format", value => {
             if (!value) return true;
@@ -40,47 +39,90 @@ const schema = yup.object({
 });
 
 const Info = () => {
-    
     const { user, token } = useOutletContext();
-    const [activeTab, setActiveTab] = React.useState('overview');
-    const queryClient = useQueryClient();    
+    const [isLoading, setIsLoading] = useState(false);
+    const [previewImg, setPreviewImg] = useState(null);
+    const [previewImgBg, setPreviewImgBg] = useState(null);
 
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
-    });
-
-
-    // Update info mutation
-    const updateInfoMutation = useMutation({
-        mutationFn: async (data) => {
-            const params = new FormData();
-            Object.keys(data).forEach(key => {
-                params.append(key, data[key]);
-            });
-            console.log(params);
-            
-        },
-        onSuccess: (result) => {
-            toast.success(result.message);
-            queryClient.invalidateQueries(['user']); // Invalidate user query to refetch
-        },
-        onError: (error) => {
-            if (error.response) {
-                toast.error(error.response.data.message || 'An error occurred');
-            } else {
-                toast.error('An unexpected error occurred. Please try again later.');
-            }
+        defaultValues: {
+            name: user.name,
+            slug: user.slug,
+            title: user.title || '',
+            bio: user.bio || '',
+            birthday: user.birthday || '',
+            x: user.x || '',
+            github: user.github || '',
         }
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            setIsLoading(true);
+            
+            console.log('Raw form data:', data);
+            
+            // Create a clean data object without null/undefined values
+            const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {});
+
+            console.log('Cleaned data:', cleanData);
+
+            // Ensure required fields are present
+            if (!cleanData.name) {
+                throw new Error('Name is required');
+            }
+            if (!cleanData.slug) {
+                throw new Error('Username is required');
+            }
+
+            const res = await updateInfo(cleanData, user.slug, token);
+            
+            if(res.success) {
+                const localUser = JSON.parse(localStorage.getItem("user")); 
+                localUser.user = res.user;
+                localStorage.setItem("user", JSON.stringify(localUser));
+                toast.success(res.message);
+            } else {
+                toast.error(res.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+            console.error('Submission error:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleFileChange = (e, fieldName) => {
         const file = e.target.files[0];
-        setValue(fieldName, file);
+        if (file) {
+            setValue(fieldName, file);
+            
+            // Create preview URL
+            const previewUrl = URL.createObjectURL(file);
+            
+            // Update preview state
+            if (fieldName === 'img') {
+                setPreviewImg(previewUrl);
+            } else if (fieldName === 'img_bg') {
+                setPreviewImgBg(previewUrl);
+            }
+        }
     };
+
+    // Cleanup preview URLs on component unmount
+    useEffect(() => {
+        return () => {
+            if (previewImg) URL.revokeObjectURL(previewImg);
+            if (previewImgBg) URL.revokeObjectURL(previewImgBg);
+        };
+    }, [previewImg, previewImgBg]);
 
     return (
         <div className="container-fluid">
@@ -111,7 +153,6 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Name</label>
                                         <input
-                                            defaultValue={user.name}
                                             type="text"
                                             className={`form-control ${errors.name ? "is-invalid" : ""}`}
                                             {...register("name")}
@@ -124,7 +165,6 @@ const Info = () => {
                                         <label className="form-label">Username</label>
                                         <input
                                             type="text"
-                                            defaultValue={user.slug}
                                             className={`form-control ${errors.slug ? "is-invalid" : ""}`}
                                             {...register("slug")}
                                         />
@@ -135,7 +175,6 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Title</label>
                                         <input
-                                            defaultValue={user.title}
                                             type="text"
                                             className={`form-control ${errors.title ? "is-invalid" : ""}`}
                                             {...register("title")}
@@ -147,7 +186,7 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">Birthday</label>
                                         <input
-                                            defaultValue={user.birthday}
+                                            // defaultValue={user.birthday}
                                             type="date"
                                             className={`form-control ${errors.birthday ? "is-invalid" : ""}`}
                                             {...register("birthday")}
@@ -155,11 +194,15 @@ const Info = () => {
                                         {errors.birthday && (
                                             <div className="invalid-feedback">{errors.birthday.message}</div>
                                         )}
+                                        {user.birthday && (
+                                            <div className="form-text">
+                                                Current birthday: {new Date(user.birthday).toLocaleDateString()}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">GitHub</label>
                                         <input
-                                            defaultValue={user.github}
                                             type="text"
                                             className={`form-control ${errors.github ? "is-invalid" : ""}`}
                                             {...register("github")}
@@ -171,7 +214,6 @@ const Info = () => {
                                     <div className="col-md-6">
                                         <label className="form-label">X (Twitter)</label>
                                         <input
-                                            defaultValue={user.x}
                                             type="text"
                                             className={`form-control ${errors.x ? "is-invalid" : ""}`}
                                             {...register("x")}
@@ -186,9 +228,7 @@ const Info = () => {
                                             className={`form-control ${errors.bio ? "is-invalid" : ""}`}
                                             rows="3"
                                             {...register("bio")}
-                                        >
-                                            {user.bio}
-                                        </textarea>
+                                        />
                                         {errors.bio && (
                                             <div className="invalid-feedback">{errors.bio.message}</div>
                                         )}
@@ -197,11 +237,19 @@ const Info = () => {
                                         <label className="form-label">Profile Image</label>
                                         <input
                                             type="file"
+                                            accept="image/*"
                                             className={`form-control ${errors.img ? "is-invalid" : ""}`}
                                             onChange={(e) => handleFileChange(e, "img")}
                                         />
-                                        {user.img && (
-                                            <img src={`${JSON.parse(user.img).url}`} alt="Profile" className="img-fluid rounded-circle" />
+                                        {(previewImg || user.img) && (
+                                            <div className="mt-2">
+                                                <img 
+                                                    src={previewImg || JSON.parse(user.img).url} 
+                                                    alt="Profile" 
+                                                    className="img-thumbnail" 
+                                                    style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover' }}
+                                                />
+                                            </div>
                                         )}
                                         {errors.img && (
                                             <div className="invalid-feedback">{errors.img.message}</div>
@@ -211,11 +259,19 @@ const Info = () => {
                                         <label className="form-label">Background Image</label>
                                         <input
                                             type="file"
+                                            accept="image/*"
                                             className={`form-control ${errors.img_bg ? "is-invalid" : ""}`}
                                             onChange={(e) => handleFileChange(e, "img_bg")}
                                         />
-                                        {user.img_bg && (
-                                            <img src={`${JSON.parse(user.img_bg).url}`} alt="Profile" className="img-fluid rounded-circle" />
+                                        {(previewImgBg || user.img_bg) && (
+                                            <div className="mt-2">
+                                                <img 
+                                                    src={previewImgBg || JSON.parse(user.img_bg).url} 
+                                                    alt="Background" 
+                                                    className="img-thumbnail" 
+                                                    style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover' }}
+                                                />
+                                            </div>
                                         )}
                                         {errors.img_bg && (
                                             <div className="invalid-feedback">{errors.img_bg.message}</div>
@@ -223,11 +279,11 @@ const Info = () => {
                                     </div>
                                     <div className="col-12">
                                         <button 
-                                            onSubmit={onSubmit}
+                                            type="submit"
                                             className="btn btn-primary"
-                                            disabled={updateInfoMutation.isPending}
+                                            disabled={isLoading}
                                         >
-                                            {updateInfoMutation.isPending ? "Updating..." : "Update Profile"}
+                                            {isLoading ? "Updating..." : "Update Profile"}
                                         </button>
                                     </div>
                                 </div>

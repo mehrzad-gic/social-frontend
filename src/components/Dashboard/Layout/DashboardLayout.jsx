@@ -7,7 +7,7 @@ const DashboardLayout = () => {
 
     const storage = JSON.parse(localStorage.getItem('user'));
     const user = storage?.user;
-    const token = storage?.token;
+    const token = storage?.jwt;
 
     return(
         <>

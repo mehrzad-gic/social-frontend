@@ -14,15 +14,10 @@ import placeholderImage from '../../../assets/images/avatar/placeholder.jpg';
 // import backgroundImage from '../../../assets/images/bg/01.jpg';
 
 const Sidebar = () => {
-  const [user] = useState(() => {
-    try {
-      const storedUser = localStorage.getItem('user');
-      return storedUser ? JSON.parse(storedUser).user : {};
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-      return {};
-    }
-  });
+
+  const user = JSON.parse(localStorage.getItem('user')).user;
+  const userImg = JSON.parse(user.img)[0];
+  const userImgBg = JSON.parse(user.img_bg)[0];
 
   const navItems = [
     { path: '/feed', icon: homeIcon, label: 'Feed' },
@@ -78,12 +73,12 @@ const Sidebar = () => {
             <div className="card overflow-hidden">
               <div
                 className="h-50px"
-                // style={{
-                //   backgroundImage: `url(${backgroundImage})`,
-                //   backgroundPosition: "center",
-                //   backgroundSize: "cover",
-                //   backgroundRepeat: "no-repeat",
-                // }}
+                style={{
+                  backgroundImage: `url(${userImgBg.secure_url ? userImgBg.secure_url : ''})`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                }}
               ></div>
 
               <div className="card-body pt-0">
@@ -92,7 +87,7 @@ const Sidebar = () => {
                     <Link to="/profile">
                       <img
                         className="avatar-img rounded border border-white border-3"
-                        src={user.img ? `${BACKEND_ROUTE}/${user.img}` : placeholderImage}
+                        src={userImg.secure_url ? `${userImg.secure_url}` : placeholderImage}
                         alt={user.name || 'User avatar'}
                       />
                     </Link>

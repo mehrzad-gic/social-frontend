@@ -28,7 +28,8 @@ const Post = ({ value, setPosts }) => {
   const commentForm = useRef(null);
   const realCommentForm = useRef(null);
   const [isAnyCommentLiked, setIsAnyCommentLiked] = useState(false);
-  
+  const userImg = JSON.parse(value.User.img)[0];
+
   const toggleReplies = useCallback((commentId) => {
     setVisibleReplies((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   }, []);
@@ -315,7 +316,7 @@ const Post = ({ value, setPosts }) => {
               <Link to="#!">
                 <img
                   className="avatar-img rounded-circle"
-                  src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
+                  src={userImg.secure_url ? `${userImg.secure_url}` : "assets/images/avatar/placeholder.jpg"}
                   alt=""
                 />
               </Link>
@@ -449,7 +450,7 @@ const Post = ({ value, setPosts }) => {
               <Link to="#!">
                 <img
                   className="avatar-img rounded-circle"
-                  src={value.User.img ? `${BACKEND_ROUTE}/${value.User.img}` : "assets/images/avatar/placeholder.jpg"}
+                  src={userImg.secure_url ? `${userImg.secure_url}` : "assets/images/avatar/placeholder.jpg"}
                   alt=""
                 />
               </Link>

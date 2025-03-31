@@ -2,12 +2,34 @@ import { BACKEND_URL } from "./Config";
 
 export const updateInfo = async (params, slug, token) => {
     try {
+        console.log('Params received:', params);
+        
+        // Create FormData object
+        const formData = new FormData();
+        
+        // Append all fields to FormData
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== null && value !== undefined) {
+                if (key === 'img' || key === 'img_bg') {
+                    // Handle file fields
+                    if (value instanceof File) {
+                        formData.append(key, value);
+                    }
+                } else {
+                    // Handle regular fields
+                    formData.append(key, value);
+                }
+            }
+        });
+
+        console.log('FormData fields:', Object.fromEntries(formData.entries()));
+        
         const response = await fetch(`${BACKEND_URL}/users/update/${slug}`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
-            body: params,
+            body: formData,
         });
         
         const data = await response.json();
@@ -16,10 +38,10 @@ export const updateInfo = async (params, slug, token) => {
             throw new Error(data.error || 'Failed to update user information');
         }
         
-        return data; // Return the response data for further processing
+        return data;
     } catch (err) {
-        console.error(err);
-        throw err; // Rethrow error for handling in the component
+        console.error('Update error:', err);
+        throw err;
     }
 };
 
