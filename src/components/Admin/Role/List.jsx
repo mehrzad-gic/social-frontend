@@ -19,6 +19,7 @@ const List = () => {
     const [roleToDelete, setRoleToDelete] = useState(null);
     const queryClient = useQueryClient();
 
+    console.log(data);
     const handleChangeStatus = async (id) => {
         try {
             setIsChangingStatus(true);
@@ -76,6 +77,7 @@ const List = () => {
                         <th>id</th>
                         <th>Name</th>
                         <th>Status</th>
+                        <th>Permissions</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th>Action</th>
@@ -91,6 +93,9 @@ const List = () => {
                                 ? <span className="badge bg-success">Active</span>
                                 : <span className="badge bg-danger">Inactive</span>}
                             </td>
+                            <td>{role?.permissions && role?.permissions.length > 0 ? role?.permissions.map((permission, index) => (
+                                <span key={permission.id} className="badge bg-primary">{permission.name}</span>
+                            )) : 'N/A'}</td>
                             <td>{new Date(role.createdAt).toLocaleString() || 'N/A'}</td>
                             <td>{new Date(role.updatedAt).toLocaleString() || 'N/A'}</td>
                             <td className='d-flex gap-2'>
