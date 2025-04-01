@@ -1,34 +1,7 @@
-import { BACKEND_URL } from './Config';
-
-// Like comment
-export const likeComment = async (id, token) => {  
-
-    try {  
-        
-        const response = await fetch(`${BACKEND_URL}/comments/like/${id}`, {  
-            method: "POST",  
-            headers: {  
-                'Content-Type': 'application/json', // Ensure the content type is set to JSON  
-                'Authorization': `Bearer ${token}`  
-            },  
-        });  
-
-        if (!response.ok) {  
-            throw new Error('Network response was not ok - ' + response.statusText);  
-        }  
-
-        return await response.json();  
-
-    } catch (error) {  
-
-        console.error('Error during the like post request:', error);  
-        return { success: false, error: error.message }; // Return error response format  
-    }  
-
-};  
+import {BACKEND_URL} from './Config';
 
 export const all = (token) => {
-    return fetch(`${BACKEND_URL}/comments/`,{
+    return fetch(`${BACKEND_URL}/permissions/`,{
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +13,7 @@ export const all = (token) => {
 }  
 
 export const create = (data,token) => {
-    return fetch(`${BACKEND_URL}/comments/create`,{
+    return fetch(`${BACKEND_URL}/permissions/create`,{
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -53,7 +26,7 @@ export const create = (data,token) => {
 }  
 
 export const update = (slug,data,token) => {
-    return fetch(`${BACKEND_URL}/comments/update/${slug}`,{
+    return fetch(`${BACKEND_URL}/permissions/update/${slug}`,{
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -66,7 +39,7 @@ export const update = (slug,data,token) => {
 }
 
 export const changeStatus = (slug,token) => {
-    return fetch(`${BACKEND_URL}/comments/change-status/${slug}`,{
+    return fetch(`${BACKEND_URL}/permissions/change-status/${slug}`,{
         method: "PATCH",
         headers: {
             'Authorization' : `Bearer ${token}`
@@ -77,7 +50,7 @@ export const changeStatus = (slug,token) => {
 }   
 
 export const destroy = (slug,token) => {
-    return fetch(`${BACKEND_URL}/comments/delete/${slug}`,{
+    return fetch(`${BACKEND_URL}/permissions/delete/${slug}`,{
         method: "DELETE",
         headers: {
             'Authorization' : `Bearer ${token}`
@@ -87,8 +60,8 @@ export const destroy = (slug,token) => {
     .catch((err) => err);
 }   
 
-export const getComment = (slug, token) => {
-    return fetch(`${BACKEND_URL}/comments/show/${slug}`,{
+export const getPermission = (slug, token) => {
+    return fetch(`${BACKEND_URL}/permissions/show/${slug}`,{
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -97,4 +70,4 @@ export const getComment = (slug, token) => {
     })
     .then((res) => res.json())
     .catch((err) => err);
-}  
+} 

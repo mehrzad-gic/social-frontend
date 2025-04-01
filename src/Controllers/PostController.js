@@ -76,10 +76,12 @@ export const all = (token,page = 1) => {
 
     return fetch(`${BACKEND_URL}/posts/?page=${page}`,{
         method: "GET",
+
         headers: {
             'Content-Type': 'application/json',
             'Authorization' : `Bearer ${token}`
         },
+
     })
     .then((res) => res.json())
     .catch((err) => err);
@@ -123,3 +125,58 @@ export const postComments = (token,id,page = 1) => {
 
 }
 
+// change status
+export const changeStatus = (slug,token) => {
+    return fetch(`${BACKEND_URL}/posts/change-status/${slug}`,{
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}
+
+
+// destroy
+export const destroy = (slug,token) => {
+    return fetch(`${BACKEND_URL}/posts/delete/${slug}`,{
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}
+
+
+// show
+export const show = (slug,token) => {
+    return fetch(`${BACKEND_URL}/posts/show/${slug}`,{
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}
+
+
+// update
+export const update = (slug,data,token) => {
+    return fetch(`${BACKEND_URL}/posts/update/${slug}`,{
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}

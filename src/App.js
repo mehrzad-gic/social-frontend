@@ -44,6 +44,21 @@ import EditFaq from "./components/Admin/Faq/Edit";
 import CategoryPrices from "./components/Admin/CategoryPrice/List.jsx";
 import CreateCategoryPrice from "./components/Admin/CategoryPrice/Create.jsx";
 import EditCategoryPrice from "./components/Admin/CategoryPrice/Edit.jsx";
+import Posts from "./components/Admin/Post/List";
+import CreatePost from "./components/Admin/Post/Create";
+import EditPost from "./components/Admin/Post/Edit";
+import Comments from "./components/Admin/Comment/List";
+import CreateComment from "./components/Admin/Comment/Create";
+import EditComment from "./components/Admin/Comment/Edit";
+import Users from "./components/Admin/User/List";
+import CreateUser from "./components/Admin/User/Create";
+import EditUser from "./components/Admin/User/Edit";
+import Roles from "./components/Admin/Role/List";
+import CreateRole from "./components/Admin/Role/Create";
+import EditRole from "./components/Admin/Role/Edit";
+import Permissions from "./components/Admin/Permission/List";
+import CreatePermission from "./components/Admin/Permission/Create";
+import EditPermission from "./components/Admin/Permission/Edit";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -151,13 +166,31 @@ function App() {
         { path: 'content/faqs/create', element: <CreateFaq /> },
         { path: 'content/faqs/edit/:slug', element: <EditFaq /> },
 
-        // some routes
-        
-        
+        // user Routes
+        { path: 'users', element: <Users /> },
+        { path: 'users/create', element: <CreateUser /> },
+        { path: 'users/edit/:slug', element: <EditUser /> },
 
+        // role Routes
+        { path: 'users/roles', element: <Roles /> },
+        { path: 'users/roles/create', element: <CreateRole /> },
+        { path: 'users/roles/edit/:slug', element: <EditRole /> },
+
+        // permission Routes
+        { path: 'users/permissions', element: <Permissions /> },
+        { path: 'users/permissions/create', element: <CreatePermission /> },
+        { path: 'users/permissions/edit/:slug', element: <EditPermission /> },
+        
 
         // Posts Routes
-        
+        { path: 'content/posts', element: <Posts /> },
+        { path: 'content/posts/create', element: <CreatePost /> },
+        { path: 'content/posts/edit/:slug', element: <EditPost /> },
+
+        // Comments Routes
+        { path: 'content/comments', element: <Comments /> },
+        { path: 'content/comments/create', element: <CreateComment /> },
+        { path: 'content/comments/edit/:slug', element: <EditComment /> },
 
       ]
 

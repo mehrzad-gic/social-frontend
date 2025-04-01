@@ -71,3 +71,75 @@ export const show = async (slug,token) => {
     }));
 
 }
+
+export const all = (token) => {
+    return fetch(`${BACKEND_URL}/users/`,{
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}  
+
+export const create = (data,token) => {
+    return fetch(`${BACKEND_URL}/users/create`,{
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}  
+
+export const update = (slug,data,token) => {
+    return fetch(`${BACKEND_URL}/users/update/${slug}`,{
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}
+
+export const changeStatus = (slug,token) => {
+    return fetch(`${BACKEND_URL}/users/change-status/${slug}`,{
+        method: "PATCH",
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())  
+    .catch((err) => err);
+}   
+
+export const destroy = (slug,token) => {
+    return fetch(`${BACKEND_URL}/users/delete/${slug}`,{
+        method: "DELETE",
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}   
+
+export const getUser = (slug, token) => {
+    return fetch(`${BACKEND_URL}/users/show/${slug}`,{
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+    })
+    .then((res) => res.json())
+    .catch((err) => err);
+}

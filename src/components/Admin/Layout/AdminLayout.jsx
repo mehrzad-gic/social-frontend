@@ -80,12 +80,12 @@ const AdminLayout = () => {
         { 
           title: 'User Roles', 
           path: '/admin/users/roles',
-          icon: <FaUserCog />
+          icon: <FaUserShield />
         },
         { 
           title: 'User Permissions', 
           path: '/admin/users/permissions',
-          icon: <FaUserLock/>
+          icon: <FaUserShield/>
         }
       ]
     },
