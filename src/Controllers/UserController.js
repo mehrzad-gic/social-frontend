@@ -60,15 +60,8 @@ export const show = async (slug,token) => {
         headers: {
             'Authorization': `Bearer ${token}`,
         }
-    }.then((res) => {
-        if (!res.ok) {
-            throw new Error('Failed to fetch user data');
-        }
-        return res.json();
-    }).catch((err) => {
-        console.error(err);
-        throw err; // Rethrow error for handling in the component
-    }));
+    }).then((res) => res.json())
+    .catch((err) => err);
 
 }
 
@@ -112,7 +105,7 @@ export const update = (slug,data,token) => {
 
 export const changeStatus = (slug,token) => {
     return fetch(`${BACKEND_URL}/users/change-status/${slug}`,{
-        method: "PATCH",
+        method: "put",
         headers: {
             'Authorization' : `Bearer ${token}`
         },

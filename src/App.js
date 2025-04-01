@@ -59,7 +59,7 @@ import EditRole from "./components/Admin/Role/Edit";
 import Permissions from "./components/Admin/Permission/List";
 import CreatePermission from "./components/Admin/Permission/Create";
 import EditPermission from "./components/Admin/Permission/Edit";
-
+import ShowUser from "./components/Admin/User/Show";
 const queryClient = new QueryClient({
     defaultOptions:{
       queries:{
@@ -170,7 +170,7 @@ function App() {
         { path: 'users', element: <Users /> },
         { path: 'users/create', element: <CreateUser /> },
         { path: 'users/edit/:slug', element: <EditUser /> },
-
+        { path: 'users/show/:slug', element: <ShowUser /> },
         // role Routes
         { path: 'users/roles', element: <Roles /> },
         { path: 'users/roles/create', element: <CreateRole /> },

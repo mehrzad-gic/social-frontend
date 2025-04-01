@@ -9,6 +9,7 @@ import DeleteConfirmationModal from '../../Home/Ui/DeleteConfirmationModal';
 import { Link } from 'react-router-dom';
 
 const List = () => {
+
     const { data, isLoading, isError } = useQuery({
         queryKey: ['users'],
         queryFn: () => all(JSON.parse(localStorage.getItem('user'))?.jwt)
@@ -75,30 +76,30 @@ const List = () => {
                     <tr>
                         <th>id</th>
                         <th>Name</th>
+                        <th>Slug</th>
                         <th>Email</th>
-                        <th>Role</th>
                         <th>Status</th>
                         <th>Created At</th>
-                        <th>Updated At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    { data?.data && data.data.length > 0 && data.data.map((user, index) => (
+                    { data?.users && data.users.length > 0 && data.users.map((user, index) => (
                         <tr key={user.id}>
                             <td>{user.id || index + 1}</td>
-                            <td>{user.name || 'N/A'}</td>
-                            <td>{user.email || 'N/A'}</td>
-                            <td>{user.role?.name || 'N/A'}</td>
+                            <td className='fs-6'>{user.name || 'N/A'}</td>
+                            <td className='fs-6'>{user.slug || 'N/A'}</td>
+                            <td className='fs-6'>{user.email || 'N/A'}</td>
                             <td onClick={() => handleChangeStatus(user.slug)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
                                 {user.status == 1 
                                 ? <span className="badge bg-success">Active</span>
                                 : <span className="badge bg-danger">Inactive</span>}
                             </td>
                             <td>{new Date(user.createdAt).toLocaleString() || 'N/A'}</td>
-                            <td>{new Date(user.updatedAt).toLocaleString() || 'N/A'}</td>
                             <td className='d-flex gap-2'>
-                                <Link to={`/admin/security/users/edit/${user.slug}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
+                                {/* show details */}
+                                <Link to={`/admin/users/show/${user.slug}`} className="btn btn-sm btn-info">Details 🔍</Link>
+                                <Link to={`/admin/users/edit/${user.slug}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
                                 <button 
                                     onClick={() => handleDeleteClick(user)}
                                     className="btn btn-sm btn-warning"
