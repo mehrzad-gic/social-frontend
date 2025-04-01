@@ -25,8 +25,8 @@ export const create = (data,token) => {
     .catch((err) => err);
 }  
 
-export const update = (slug,data,token) => {
-    return fetch(`${BACKEND_URL}/permissions/update/${slug}`,{
+export const update = (id,data,token) => {
+    return fetch(`${BACKEND_URL}/permissions/update/${id}`,{
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -38,9 +38,9 @@ export const update = (slug,data,token) => {
     .catch((err) => err);
 }
 
-export const changeStatus = (slug,token) => {
-    return fetch(`${BACKEND_URL}/permissions/change-status/${slug}`,{
-        method: "PATCH",
+export const changeStatus = (id,token) => {
+    return fetch(`${BACKEND_URL}/permissions/change-status/${id}`,{
+        method: "PUT",
         headers: {
             'Authorization' : `Bearer ${token}`
         },
@@ -49,8 +49,8 @@ export const changeStatus = (slug,token) => {
     .catch((err) => err);
 }   
 
-export const destroy = (slug,token) => {
-    return fetch(`${BACKEND_URL}/permissions/delete/${slug}`,{
+export const destroy = (id,token) => {
+    return fetch(`${BACKEND_URL}/permissions/delete/${id}`,{
         method: "DELETE",
         headers: {
             'Authorization' : `Bearer ${token}`
@@ -60,8 +60,8 @@ export const destroy = (slug,token) => {
     .catch((err) => err);
 }   
 
-export const getPermission = (slug, token) => {
-    return fetch(`${BACKEND_URL}/permissions/show/${slug}`,{
+export const getPermission = (id, token) => {
+    return fetch(`${BACKEND_URL}/permissions/show/${id}`,{
         method: "GET",
         headers: {
             'Content-Type': 'application/json',

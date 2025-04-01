@@ -19,14 +19,14 @@ const List = () => {
     const [roleToDelete, setRoleToDelete] = useState(null);
     const queryClient = useQueryClient();
 
-    const handleChangeStatus = async (slug) => {
+    const handleChangeStatus = async (id) => {
         try {
             setIsChangingStatus(true);
-            const res = await changeStatus(slug, JSON.parse(localStorage.getItem('user'))?.jwt);
+            const res = await changeStatus(id, JSON.parse(localStorage.getItem('user'))?.jwt);
             if(res.success) {
                 toast.success(res.message);
                 queryClient.invalidateQueries({queryKey: ['roles']});
-                queryClient.invalidateQueries({queryKey: ['role', slug]});
+                queryClient.invalidateQueries({queryKey: ['role', id]});
             } else {
                 toast.error(res.message);
             }
@@ -45,7 +45,7 @@ const List = () => {
     const handleDeleteConfirm = async () => {
         try {
             setIsDeleting(true);
-            const res = await destroy(roleToDelete.slug, JSON.parse(localStorage.getItem('user'))?.jwt);
+            const res = await destroy(roleToDelete.id, JSON.parse(localStorage.getItem('user'))?.jwt);
             if(res.success) {
                 toast.success(res.message);
                 queryClient.invalidateQueries({queryKey: ['roles']});
@@ -75,7 +75,6 @@ const List = () => {
                     <tr>
                         <th>id</th>
                         <th>Name</th>
-                        <th>Slug</th>
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Updated At</th>
@@ -83,12 +82,11 @@ const List = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    { data?.data && data.data.length > 0 && data.data.map((role, index) => (
+                    { data?.roles && data.roles.length > 0 ? data.roles.map((role, index) => (
                         <tr key={role.id}>
                             <td>{role.id || index + 1}</td>
                             <td>{role.name || 'N/A'}</td>
-                            <td>{role.slug || 'N/A'}</td>
-                            <td onClick={() => handleChangeStatus(role.slug)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
+                            <td onClick={() => handleChangeStatus(role.id)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
                                 {role.status == 1 
                                 ? <span className="badge bg-success">Active</span>
                                 : <span className="badge bg-danger">Inactive</span>}
@@ -96,17 +94,22 @@ const List = () => {
                             <td>{new Date(role.createdAt).toLocaleString() || 'N/A'}</td>
                             <td>{new Date(role.updatedAt).toLocaleString() || 'N/A'}</td>
                             <td className='d-flex gap-2'>
-                                <Link to={`/admin/security/roles/edit/${role.slug}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
+                                <Link to={`/admin/users/roles/edit/${role.id}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
                                 <button 
                                     onClick={() => handleDeleteClick(role)}
                                     className="btn btn-sm btn-warning"
                                     disabled={isDeleting}
+                                    style={{cursor: 'pointer'}}
                                 >
                                     Delete ❌
                                 </button>
                             </td>
                         </tr>
-                    ))}
+                    )) : (
+                        <tr>
+                            <td colSpan="7" className="text-center">No roles found</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 

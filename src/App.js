@@ -174,12 +174,12 @@ function App() {
         // role Routes
         { path: 'users/roles', element: <Roles /> },
         { path: 'users/roles/create', element: <CreateRole /> },
-        { path: 'users/roles/edit/:slug', element: <EditRole /> },
+        { path: 'users/roles/edit/:id', element: <EditRole /> },
 
         // permission Routes
         { path: 'users/permissions', element: <Permissions /> },
         { path: 'users/permissions/create', element: <CreatePermission /> },
-        { path: 'users/permissions/edit/:slug', element: <EditPermission /> },
+        { path: 'users/permissions/edit/:id', element: <EditPermission /> },
         
 
         // Posts Routes

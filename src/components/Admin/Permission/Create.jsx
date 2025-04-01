@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 const Create = () => {
+
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -24,7 +25,7 @@ const Create = () => {
             if(response.success) {
                 toast.success('Permission created successfully');
                 queryClient.invalidateQueries({queryKey: ['permissions']});
-                navigate('/admin/security/permissions');
+                navigate('/admin/users/permissions');
             } else {
                 setIsError(response.message);
             }
@@ -43,7 +44,7 @@ const Create = () => {
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
                 <h1 className='text-success'>Create Permission</h1>
-                <Link to='/admin/security/permissions' className='btn btn-secondary'>Back</Link>
+                <Link to='/admin/users/permissions' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
@@ -58,6 +59,11 @@ const Create = () => {
                         <option value={0}>Inactive</option>
                     </select>
                     {errors.status && <span className="text-danger">{errors.status.message}</span>}
+                </div>
+                <div className='mt-3'>
+                    <label htmlFor="des" className="form-label">Description</label>
+                    <textarea name='des' className='form-control' {...register('des', {required: 'Description is required'})}></textarea>
+                    {errors.des && <span className="text-danger">{errors.des.message}</span>}
                 </div>
                 <button type="submit" disabled={isLoading} className="btn btn-primary mt-3">{ isLoading ? 'Creating...' : 'Create' }</button>
             </form>

@@ -73,17 +73,12 @@ const AdminLayout = () => {
           icon: <FaUsers />
         },
         { 
-          title: 'Add User', 
-          path: '/admin/users/add',
-          icon: <FaUserPlus />
-        },
-        { 
-          title: 'User Roles', 
+          title: 'Roles', 
           path: '/admin/users/roles',
           icon: <FaUserShield />
         },
         { 
-          title: 'User Permissions', 
+          title: 'Permissions', 
           path: '/admin/users/permissions',
           icon: <FaUserShield/>
         }

@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 const Create = () => {
+
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -43,7 +44,7 @@ const Create = () => {
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
                 <h1 className='text-success'>Create User</h1>
-                <Link to='/admin/security/users' className='btn btn-secondary'>Back</Link>
+                <Link to='/admin/users' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">

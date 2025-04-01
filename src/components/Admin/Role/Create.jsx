@@ -9,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 const Create = () => {
+
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -20,11 +21,11 @@ const Create = () => {
             setIsLoading(true);
             const token = JSON.parse(localStorage.getItem('user')).jwt;
             const response = await create(data,token);
-            
+            console.log(response);
             if(response.success) {
                 toast.success('Role created successfully');
                 queryClient.invalidateQueries({queryKey: ['roles']});
-                navigate('/admin/security/roles');
+                navigate('/admin/users/roles');
             } else {
                 setIsError(response.message);
             }
@@ -37,13 +38,14 @@ const Create = () => {
     }
 
     if(isLoading) return <Loading />
-    if(isError) return <Error message={isError} />
 
     return (
         <div className='container'>
+                        {isError && <Error message={isError} />}
+
             <div className='d-flex justify-content-between align-items-center mb-4'>
                 <h1 className='text-success'>Create Role</h1>
-                <Link to='/admin/security/roles' className='btn btn-secondary'>Back</Link>
+                <Link to='/admin/users/roles' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">

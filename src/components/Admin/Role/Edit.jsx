@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 
 const Edit = () => {
     const navigate = useNavigate();
-    const {slug} = useParams();
+    const {id} = useParams();
     const token = JSON.parse(localStorage.getItem('user'))?.jwt;
     
     const {data, isLoading, isError} = useQuery({
-        queryKey: ['role', slug],
-        queryFn: () => getRole(slug, token)
+        queryKey: ['role', id],
+        queryFn: () => getRole(id, token)
     });
     
     const queryClient = useQueryClient();
@@ -25,13 +25,13 @@ const Edit = () => {
     const onSubmit = async (data) => {
         try {
             setIsUpdating(true);
-            const response = await update(slug, data, token);
+            const response = await update(id, data, token);
 
             if(response.success) {
                 toast.success(response.message);
                 queryClient.invalidateQueries({queryKey: ['roles']});
-                queryClient.invalidateQueries({queryKey: ['role', slug]});
-                navigate('/admin/security/roles');
+                queryClient.invalidateQueries({queryKey: ['role', id]});
+                navigate('/admin/users/roles');
             } else {
                 toast.error(response.message);
             }
@@ -49,20 +49,20 @@ const Edit = () => {
     return (
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
-                <h1 className='text-success'>Edit Role <span className='text-warning'>{`:/${data?.data?.name}`}</span></h1>
-                <Link to='/admin/security/roles' className='btn btn-secondary'>Back</Link>
+                <h1 className='text-success'>Edit Role <span className='text-warning'>{`:/${data?.role?.name}`}</span></h1>
+                <Link to='/admin/users/roles' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name</label>
-                    <input defaultValue={data?.data?.name} type="text" className="form-control" {...register('name', {required: 'Name is required'})} />
+                    <input defaultValue={data?.role?.name} type="text" className="form-control" {...register('name', {required: 'Name is required'})} />
                     {errors.name && <span className="text-danger">{errors.name.message}</span>}
                 </div>
                 <div className='mt-3'>
                     <label htmlFor="status" className="form-label">Status</label>
-                    <select defaultValue={data?.data?.status} name='status' className='form-control' {...register('status', {required: 'Status is required', valueAsNumber: true})}>
-                        <option value={1}>Active</option>
-                        <option value={0}>Inactive</option>
+                    <select defaultValue={data?.role?.status} name='status' className='form-control' {...register('status', {required: 'Status is required', valueAsNumber: true})}>
+                        <option selected={data?.role?.status === 1} value={1}>Active</option>
+                        <option selected={data?.role?.status === 0} value={0}>Inactive</option>
                     </select>
                     {errors.status && <span className="text-danger">{errors.status.message}</span>}
                 </div>

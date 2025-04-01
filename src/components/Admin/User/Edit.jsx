@@ -50,7 +50,7 @@ const Edit = () => {
         <div className='container'>
             <div className='d-flex justify-content-between align-items-center mb-4'>
                 <h1 className='text-success'>Edit User <span className='text-warning'>{`:/${data?.data?.name}`}</span></h1>
-                <Link to='/admin/security/users' className='btn btn-secondary'>Back</Link>
+                <Link to='/admin/users' className='btn btn-secondary'>Back</Link>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">

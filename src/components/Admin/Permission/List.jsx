@@ -75,7 +75,6 @@ const List = () => {
                     <tr>
                         <th>id</th>
                         <th>Name</th>
-                        <th>Slug</th>
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Updated At</th>
@@ -83,12 +82,11 @@ const List = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    { data?.data && data.data.length > 0 && data.data.map((permission, index) => (
+                    { data?.permissions && data.permissions.length > 0 ? data.permissions.map((permission, index) => (
                         <tr key={permission.id}>
                             <td>{permission.id || index + 1}</td>
                             <td>{permission.name || 'N/A'}</td>
-                            <td>{permission.slug || 'N/A'}</td>
-                            <td onClick={() => handleChangeStatus(permission.slug)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
+                            <td onClick={() => handleChangeStatus(permission.id)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
                                 {permission.status == 1 
                                 ? <span className="badge bg-success">Active</span>
                                 : <span className="badge bg-danger">Inactive</span>}
@@ -96,7 +94,7 @@ const List = () => {
                             <td>{new Date(permission.createdAt).toLocaleString() || 'N/A'}</td>
                             <td>{new Date(permission.updatedAt).toLocaleString() || 'N/A'}</td>
                             <td className='d-flex gap-2'>
-                                <Link to={`/admin/security/permissions/edit/${permission.slug}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
+                                <Link to={`/admin/users/permissions/edit/${permission.id}`} className="btn btn-sm btn-primary">Edit ✏️</Link>
                                 <button 
                                     onClick={() => handleDeleteClick(permission)}
                                     className="btn btn-sm btn-warning"
@@ -106,7 +104,11 @@ const List = () => {
                                 </button>
                             </td>
                         </tr>
-                    ))}
+                    )) : (
+                        <tr>
+                            <td colSpan="7" className="text-center">No permissions found</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 
