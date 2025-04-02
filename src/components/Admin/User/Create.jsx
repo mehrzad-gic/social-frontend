@@ -8,21 +8,41 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { create } from '../../../Controllers/UserController';
 import { all } from '../../../Controllers/RoleController';
 import { Link } from 'react-router-dom';
+import { schema } from './validation';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 
 const Edit = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const token = JSON.parse(localStorage.getItem('user'))?.jwt;
-    
+    const [previewImg, setPreviewImg] = useState(null);
+    const [previewImgBg, setPreviewImgBg] = useState(null);
+
     // roles
     const { data: roles, isLoading, isError} = useQuery({
         queryKey: ['roles'],
         queryFn: () => all(token)
     });
     
-    const queryClient = useQueryClient();
-    const {register, handleSubmit, formState: {errors}} = useForm();
+    const {register, handleSubmit, formState: {errors}, setValue, watch} = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            name: '',
+            email: '',
+            title: '',
+            password: '',
+            confirm_password: '',
+            birthday: '',
+            github: '',
+            x: '',
+            img: null,
+            img_bg: null,
+            roles: [],
+        }
+    });
+
     const [isUpdating, setIsUpdating] = useState(false);
 
     const onSubmit = async (data) => {
@@ -36,6 +56,31 @@ const Edit = () => {
             setIsUpdating(false);
         }
     }
+
+    const handleFileChange = (e, fieldName) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setValue(fieldName, e.target.result);
+                if (fieldName === 'img') {
+                    setPreviewImg(e.target.result);
+                } else if (fieldName === 'img_bg') {
+                    setPreviewImgBg(e.target.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRoleChange = (e, roleId) => {
+        const roles = watch('roles');
+        if (roles.includes(roleId)) {
+            setValue('roles', roles.filter(id => id !== roleId));
+        } else {
+            setValue('roles', [...roles, roleId]);
+        }
+    }   
 
     if(isLoading) return <Loading />
     if(isError) return <Error message={isError} />
@@ -59,12 +104,21 @@ const Edit = () => {
                         </div>
                     </div>
 
+
                     {/* email */}
                     <div className="col-md-6 mb-4">
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email</label>
                             <input type="email" className="form-control" {...register('email', {required: 'Email is required'})} />
                             {errors.email && <span className="text-danger">{errors.email.message}</span>}
+                        </div>
+                    </div>
+
+                    {/* title */}
+                    <div className="col-md-12 mb-4">
+                        <div className="mb-3">
+                            <label htmlFor="title" className="form-label">Title</label>
+                            <input type="text" className="form-control" {...register('title', {required: 'Title is required'})} />
                         </div>
                     </div>
 
@@ -126,8 +180,8 @@ const Edit = () => {
                         <div className='d-flex flex-wrap gap-2'>
                             {roles?.roles?.map((role) => (
                                 <div key={role.id}>
-                                <input type="checkbox" name='roles' value={role.id} />
-                                <label htmlFor={role.id} className='ms-2 text-capitalize'>{role.name}</label>
+                                    <input onChange={(e) => handleRoleChange(e, role.id)} type="checkbox" name='roles' id={role.id} value={role.id} />
+                                    <label htmlFor={role.id} className='ms-2 text-capitalize'>{role.name}</label>
                                 </div>
                             ))}
                         </div>
@@ -137,14 +191,15 @@ const Edit = () => {
                     {/* img */}
                     <div className="col-md-6 mb-4">
                         <label htmlFor="img" className="form-label">Image</label>
-                        <input type="file" className="form-control" {...register('img')} />
+                        <input type="file" className="form-control" {...register('img')} onChange={(e) => handleFileChange(e, 'img')} />
+                        {previewImg && <img src={previewImg} alt="preview" className='img-fluid mt-2 rounded w-100' />}
                     </div>
 
                     {/* img_bg */}
                     <div className="col-md-6 mb-4">
                         <label htmlFor="img_bg" className="form-label">Image Background</label>
-                        <input type="file" className="form-control" {...register('img_bg')} />
-
+                        <input type="file" className="form-control" {...register('img_bg')} onChange={(e) => handleFileChange(e, 'img_bg')} />
+                        {previewImgBg && <img src={previewImgBg} alt="preview" className='img-fluid mt-2 rounded w-100' />}
                     </div>
 
                     {/* bio */}
