@@ -47,9 +47,7 @@ export const updateInfo = async (params, slug, token) => {
 
 export const checkSlugUnique = async (slug, email) => {
     const response = await fetch(`${BACKEND_URL}/dashboard/check-slug-unique/${slug}/${email}`);
-    const data = await response.json();
-    console.log('dataaaaaaaaaaaaa',data);
-    
+    const data = await response.json();    
     return data.isUnique; // Assume the response contains an `isUnique` boolean
 };
 
