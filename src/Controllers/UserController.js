@@ -1,28 +1,12 @@
 import { BACKEND_URL } from "./Config";
+import { createFormData } from "../Helpers/FormData";
 
 export const updateInfo = async (params, slug, token) => {
-    try {
-        console.log('Params received:', params);
-        
-        // Create FormData object
-        const formData = new FormData();
-        
-        // Append all fields to FormData
-        Object.entries(params).forEach(([key, value]) => {
-            if (value !== null && value !== undefined) {
-                if (key === 'img' || key === 'img_bg') {
-                    // Handle file fields
-                    if (value instanceof File) {
-                        formData.append(key, value);
-                    }
-                } else {
-                    // Handle regular fields
-                    formData.append(key, value);
-                }
-            }
-        });
 
-        console.log('FormData fields:', Object.fromEntries(formData.entries()));
+    try {
+
+        // Create FormData object
+        const formData = createFormData(params);
         
         const response = await fetch(`${BACKEND_URL}/users/update/${slug}`, {
             method: "PUT",
@@ -39,17 +23,21 @@ export const updateInfo = async (params, slug, token) => {
         }
         
         return data;
+
     } catch (err) {
+
         console.error('Update error:', err);
         throw err;
     }
 };
+
 
 export const checkSlugUnique = async (slug, email) => {
     const response = await fetch(`${BACKEND_URL}/dashboard/check-slug-unique/${slug}/${email}`);
     const data = await response.json();    
     return data.isUnique; // Assume the response contains an `isUnique` boolean
 };
+
 
 export const show = async (slug,token) => {
 
@@ -63,6 +51,7 @@ export const show = async (slug,token) => {
 
 }
 
+
 export const all = (token) => {
     return fetch(`${BACKEND_URL}/users/`,{
         method: "GET",
@@ -75,32 +64,51 @@ export const all = (token) => {
     .catch((err) => err);
 }  
 
-export const create = (data,token) => {
-    return fetch(`${BACKEND_URL}/users/create`,{
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-    })
-    .then((res) => res.json())
-    .catch((err) => err);
+
+export const create = async (data,token) => {
+
+    try {
+
+        const formData = createFormData(data);
+
+        const response = await fetch(`${BACKEND_URL}/users/create`, {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        return await response.json();
+
+    } catch (err) {
+        console.error('error:', err);
+        throw err;
+    }
 }  
 
-export const update = (slug,data,token) => {
-    return fetch(`${BACKEND_URL}/users/update/${slug}`,{
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-    })
-    .then((res) => res.json())
-    .catch((err) => err);
-}
+// Controllers/UserController.js
+export const update = async (slug, data, token) => {
+   
+    try {
 
+        const formData = createFormData(data);
+
+        const response = await fetch(`${BACKEND_URL}/users/update/${slug}`, {
+            method: "PUT",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        return await response.json();
+
+    } catch (err) {
+        console.error('Update error:', err);
+        throw err;
+    }
+};
 export const changeStatus = (slug,token) => {
     return fetch(`${BACKEND_URL}/users/change-status/${slug}`,{
         method: "put",
