@@ -7,7 +7,7 @@ import { updateInfo, uploadImage } from "../../../Controllers/UserController";
 import { Link } from "react-router-dom";
 import { FaUsers, FaComments, FaHeart, FaBookmark, FaChartLine, FaBell, FaCog } from "react-icons/fa";
 import { toast } from "react-toastify";
-
+import FileInput from "../../Home/Ui/FileInput";
 const schema = yup.object({
     name: yup.string().required("Name is required").max(255),
     slug: yup.string()
@@ -99,30 +99,6 @@ const Info = () => {
         }
     };
 
-    const handleFileChange = (e, fieldName) => {
-        const file = e.target.files[0];
-        if (file) {
-            setValue(fieldName, file);
-            
-            // Create preview URL
-            const previewUrl = URL.createObjectURL(file);
-            
-            // Update preview state
-            if (fieldName === 'img') {
-                setPreviewImg(previewUrl);
-            } else if (fieldName === 'img_bg') {
-                setPreviewImgBg(previewUrl);
-            }
-        }
-    };
-
-    // Cleanup preview URLs on component unmount
-    useEffect(() => {
-        return () => {
-            if (previewImg) URL.revokeObjectURL(previewImg);
-            if (previewImgBg) URL.revokeObjectURL(previewImgBg);
-        };
-    }, [previewImg, previewImgBg]);
 
     return (
         <div className="container-fluid">
@@ -234,48 +210,24 @@ const Info = () => {
                                         )}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="form-label">Profile Image</label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            className={`form-control ${errors.img ? "is-invalid" : ""}`}
-                                            onChange={(e) => handleFileChange(e, "img")}
+                                        <FileInput
+                                            label="Profile Image"
+                                            name="img"
+                                            register={register}
+                                            setValue={setValue}
+                                            errors={errors}
+                                            defaultImage={JSON.parse(user.img)[0].url}
                                         />
-                                        {(previewImg || user.img) && (
-                                            <div className="mt-2">
-                                                <img 
-                                                    src={previewImg || JSON.parse(user.img).url} 
-                                                    alt="Profile" 
-                                                    className="img-thumbnail" 
-                                                    style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover' }}
-                                                />
-                                            </div>
-                                        )}
-                                        {errors.img && (
-                                            <div className="invalid-feedback">{errors.img.message}</div>
-                                        )}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="form-label">Background Image</label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            className={`form-control ${errors.img_bg ? "is-invalid" : ""}`}
-                                            onChange={(e) => handleFileChange(e, "img_bg")}
+                                        <FileInput
+                                            label="Background Image"
+                                            name="img_bg"
+                                            register={register}
+                                            setValue={setValue}
+                                            errors={errors}
+                                            defaultImage={JSON.parse(user.img_bg)[0].url}
                                         />
-                                        {(previewImgBg || user.img_bg) && (
-                                            <div className="mt-2">
-                                                <img 
-                                                    src={previewImgBg || JSON.parse(user.img_bg).url} 
-                                                    alt="Background" 
-                                                    className="img-thumbnail" 
-                                                    style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover' }}
-                                                />
-                                            </div>
-                                        )}
-                                        {errors.img_bg && (
-                                            <div className="invalid-feedback">{errors.img_bg.message}</div>
-                                        )}
                                     </div>
                                     <div className="col-12">
                                         <button 

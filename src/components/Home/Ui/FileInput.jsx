@@ -28,14 +28,14 @@ const FileInput = ({
             <input type='file' accept={accept} onChange={handleFileChange} className='form-control' />
             <div className='mt-2 row'>
                 <div className='col-md-6'>
-                    {defaultImage && <img src={defaultImage} alt={label} style={{ maxHeight: '200px', width: '100%', filter: preview ? 'blur(10px)' : 'none' }} className='img-thumbnail' />}
+                    {defaultImage && <img src={defaultImage} alt={label} style={{ maxHeight: '200px', objectFit: 'cover' , height: '200px', width: '100%', filter: preview ? 'blur(10px)' : 'none' }} className='img-thumbnail' />}
                 </div>
                 <div className='col-md-6'>
                     {preview && (
                         <>
-                            <img src={preview} alt={label} style={{ maxHeight: '200px', width: '100%' }} className='img-thumbnail' />
+                            <img src={preview} alt={label} style={{ maxHeight: '200px', objectFit: 'cover' , height: '200px', width: '100%' }} className='img-thumbnail' />
                             {/* remove button */}
-                            <p className='btn btn-secondary btn-sm mt-2' onClick={() => setPreview(null)}>❌</p>
+                            <p className='btn btn-secondary btn-sm mt-1' onClick={() => setPreview(null)}>❌</p>
                         </>
                     )}
 
