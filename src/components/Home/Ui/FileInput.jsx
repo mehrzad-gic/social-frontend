@@ -8,7 +8,8 @@ const FileInput = ({
     setValue, 
     errors, 
     defaultImage, 
-    accept = "image/*" 
+    accept = "image/*",
+    showDefault = true
 }) => {
 
     const [preview, setPreview] = useState(null);
@@ -32,6 +33,7 @@ const FileInput = ({
             <label htmlFor={name} className='form-label'>{label}</label>
             <input type='file' accept={accept} onChange={handleFileChange} className='form-control' />
             <div className='mt-2 row'>
+                {showDefault ? (<>
                 <div className='col-md-6'>
                     {defaultImage && <img src={defaultImage} alt={label} style={{ maxHeight: '200px', objectFit: 'cover' , height: '200px', width: '100%', filter: preview ? 'blur(10px)' : 'none' }} className='img-thumbnail' />}
                 </div>
@@ -45,6 +47,12 @@ const FileInput = ({
                     )}
 
                 </div>
+                </>
+                ) : (
+                    <div className='col-md-12'>
+                        {preview && <img src={preview} alt={label} style={{ maxHeight: '200px', objectFit: 'cover' , height: '200px', width: '100%' }} className='img-thumbnail' />}
+                    </div>
+                )}
             </div>
             {errors[name] && <div className='text-danger'>{errors[name].message}</div>}
         </div>

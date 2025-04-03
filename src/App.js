@@ -64,7 +64,6 @@ import PostDetails from "./components/Home/Post/Show.jsx";
 import Groups from "./components/Admin/Group/List";
 import CreateGroup from "./components/Admin/Group/Create";
 import EditGroup from "./components/Admin/Group/Edit";
-import ShowGroup from "./components/Admin/Group/Show";
 import GroupPosts from "./components/Admin/Group/GroupPosts";
 import GroupMembers from "./components/Admin/Group/GroupMembers";
 
@@ -205,7 +204,6 @@ function App() {
         { path: 'content/groups', element: <Groups /> },
         { path: 'content/groups/create', element: <CreateGroup /> },
         { path: 'content/groups/edit/:slug', element: <EditGroup /> },
-        { path: 'content/groups/show/:slug', element: <ShowGroup /> },
         { path: 'content/groups/posts/:slug', element: <GroupPosts /> },
         { path: 'content/groups/members/:slug', element: <GroupMembers /> },
 

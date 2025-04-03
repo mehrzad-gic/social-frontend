@@ -1,8 +1,8 @@
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "./Config.js";
 import { createFormData } from "../Helpers/FormData.js";
 
 // Get All Groups
-export const all = async () => {
+export const all = async (token) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}/groups`, {
@@ -18,7 +18,7 @@ export const all = async () => {
 };
 
 // Create Group
-export const create = async (data) => {
+export const create = async (data, token) => {
 
     try {
 
@@ -41,7 +41,7 @@ export const create = async (data) => {
 
 
 // Update Group
-export const update = async (data) => {
+export const update = async (data, token) => {
 
     try {
 
@@ -60,15 +60,18 @@ export const update = async (data) => {
 };
 
 // Delete Group
-export const destroy = async (slug) => {
+export const destroy = async (slug, token) => {
     return await fetch(`${BACKEND_URL}/groups/${slug}`, {
         method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
     }).then((response) => response.json());
 };
 
 
 // Get Group by Slug
-export const show = async (slug) => {
+export const show = async (slug, token) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}/groups/${slug}`,{
@@ -85,7 +88,7 @@ export const show = async (slug) => {
 
 
 // Get Group Posts
-export const posts = async (slug) => {
+export const posts = async (slug, token) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}/groups/posts/${slug}`, {
@@ -102,7 +105,7 @@ export const posts = async (slug) => {
 
 
 // Get Group Members
-export const members = async (slug) => {
+export const members = async (slug, token) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}/groups/members/${slug}`, {
@@ -119,12 +122,15 @@ export const members = async (slug) => {
 
 
 // Change Group Status
-export const changeStatus = async (slug, status) => {
+export const changeStatus = async (slug, status, token) => {
 
     try {
         const response = await fetch(`${BACKEND_URL}/groups/status/${slug}`, {
             method: "PUT",
             body: JSON.stringify({ status }),
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
         });
         return response.json();
     } catch (error) {
