@@ -60,6 +60,14 @@ import Permissions from "./components/Admin/Permission/List";
 import CreatePermission from "./components/Admin/Permission/Create";
 import EditPermission from "./components/Admin/Permission/Edit";
 import ShowUser from "./components/Admin/User/Show";
+import PostDetails from "./components/Home/Post/Show.jsx";
+import Groups from "./components/Admin/Group/List";
+import CreateGroup from "./components/Admin/Group/Create";
+import EditGroup from "./components/Admin/Group/Edit";
+import ShowGroup from "./components/Admin/Group/Show";
+import GroupPosts from "./components/Admin/Group/GroupPosts";
+import GroupMembers from "./components/Admin/Group/GroupMembers";
+
 const queryClient = new QueryClient({
     defaultOptions:{
       queries:{
@@ -79,6 +87,7 @@ function App() {
       children: [
         { path: "/", element: <Index /> },
         { path: "/create-post", element: <Create /> },
+        { path: "/post-details/:slug", element: <PostDetails /> },
         { path: "/jobs", element: <Jobs /> },
         { path: "/jobs/:slug", element: <JobDetail /> },
         { path: "/jobs/create", element: <CreateJob /> },
@@ -191,6 +200,14 @@ function App() {
         { path: 'content/comments', element: <Comments /> },
         { path: 'content/comments/create', element: <CreateComment /> },
         { path: 'content/comments/edit/:slug', element: <EditComment /> },
+
+        // Group Routes
+        { path: 'content/groups', element: <Groups /> },
+        { path: 'content/groups/create', element: <CreateGroup /> },
+        { path: 'content/groups/edit/:slug', element: <EditGroup /> },
+        { path: 'content/groups/show/:slug', element: <ShowGroup /> },
+        { path: 'content/groups/posts/:slug', element: <GroupPosts /> },
+        { path: 'content/groups/members/:slug', element: <GroupMembers /> },
 
       ]
 

@@ -375,7 +375,7 @@ const Post = ({ value, setPosts }) => {
       </div>
       {/* Card body */}
       <div className="card-body">
-        <h5 className="text-gray">{value.name}</h5>
+        <Link to={`/post-details/${value.slug}`} className="text-gray text-decoration-none h5">{value.name}</Link>
         <p className="mt-3">{value.text}</p>
 
         {/* Image Slider */}
