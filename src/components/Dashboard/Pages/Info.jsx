@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { updateInfo, uploadImage } from "../../../Controllers/UserController";
+import { updateInfo } from "../../../Controllers/UserController";
 import { Link } from "react-router-dom";
 import { FaUsers, FaComments, FaHeart, FaBookmark, FaChartLine, FaBell, FaCog } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -58,30 +58,12 @@ const Info = () => {
     });
 
     const onSubmit = async (data) => {
+
         try {
+
             setIsLoading(true);
-            
-            console.log('Raw form data:', data);
-            
-            // Create a clean data object without null/undefined values
-            const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-                if (value !== null && value !== undefined && value !== '') {
-                    acc[key] = value;
-                }
-                return acc;
-            }, {});
 
-            console.log('Cleaned data:', cleanData);
-
-            // Ensure required fields are present
-            if (!cleanData.name) {
-                throw new Error('Name is required');
-            }
-            if (!cleanData.slug) {
-                throw new Error('Username is required');
-            }
-
-            const res = await updateInfo(cleanData, user.slug, token);
+            const res = await updateInfo(data, user.slug, token);
             
             if(res.success) {
                 const localUser = JSON.parse(localStorage.getItem("user")); 

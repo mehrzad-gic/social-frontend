@@ -55,6 +55,7 @@ const Edit = () => {
 
     useEffect(() => {
         if (userData?.user) {
+            console.log(userData.user);
             const user = userData.user;
             setValue('name', user.name);
             setValue('title', user.title);
@@ -65,7 +66,7 @@ const Edit = () => {
             setValue('bio', user.bio || '');
             
             if (user.roles) {
-                const roleIds = user.roles.map(role => Number(role));
+                const roleIds = user.roles.map(role => role.id);
                 setSelectedRoles(roleIds);
                 setValue('roles', roleIds);
             }
@@ -100,6 +101,10 @@ const Edit = () => {
                 toast.success(response.message);
                 queryClient.invalidateQueries({ queryKey: ['users'] });
                 queryClient.invalidateQueries({ queryKey: ['user', slug] });
+                // update the user in the local storage
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.user = response.user;
+                localStorage.setItem('user', JSON.stringify(user));
                 navigate('/admin/users');
             } else {
                 toast.error(response.message || 'Failed to update user');
@@ -223,7 +228,7 @@ const Edit = () => {
                                         className="form-check-input"
                                         id={`role-${role.id}`}
                                         value={role.id}
-                                        checked={selectedRoles.includes(Number(role.id))}
+                                        checked={selectedRoles.includes(role.id)}
                                         onChange={() => handleRoleChange(role.id)}
                                     />
                                     <label 

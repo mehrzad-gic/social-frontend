@@ -8,7 +8,7 @@ export const updateInfo = async (params, slug, token) => {
         // Create FormData object
         const formData = createFormData(params);
         
-        const response = await fetch(`${BACKEND_URL}/users/update/${slug}`, {
+        const response = await fetch(`${BACKEND_URL}/users/update-info/${slug}`, {
             method: "PUT",
             headers: {
                 'Authorization': `Bearer ${token}`,
