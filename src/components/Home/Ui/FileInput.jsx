@@ -22,6 +22,11 @@ const FileInput = ({
         }
     };
 
+    const handleRemoveFile = () => {
+        setValue(name, null);
+        setPreview(null);
+    }
+
     return (
         <div className='mb-3'>
             <label htmlFor={name} className='form-label'>{label}</label>
@@ -35,7 +40,7 @@ const FileInput = ({
                         <>
                             <img src={preview} alt={label} style={{ maxHeight: '200px', objectFit: 'cover' , height: '200px', width: '100%' }} className='img-thumbnail' />
                             {/* remove button */}
-                            <p className='btn btn-secondary btn-sm mt-1' onClick={() => setPreview(null)}>❌</p>
+                            <p className='btn btn-secondary btn-sm mt-1' onClick={() => handleRemoveFile()}>❌</p>
                         </>
                     )}
 

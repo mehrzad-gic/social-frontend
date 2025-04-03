@@ -15,5 +15,7 @@ export const createFormData = (data) => {
         }
     });
 
+    console.log('formData📅',formData);
+
     return formData;
 };

@@ -10,15 +10,14 @@ import { all } from '../../../Controllers/RoleController';
 import { Link } from 'react-router-dom';
 import { schema } from './validation';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import FileInput from '../../Home/Ui/FileInput';
 
 const Edit = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const token = JSON.parse(localStorage.getItem('user'))?.jwt;
-    const [previewImg, setPreviewImg] = useState(null);
-    const [previewImgBg, setPreviewImgBg] = useState(null);
+    const queryClient = useQueryClient();
 
     // roles
     const { data: roles, isLoading, isError} = useQuery({
@@ -43,35 +42,28 @@ const Edit = () => {
         }
     });
 
-    const [isUpdating, setIsUpdating] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
 
     const onSubmit = async (data) => {
         try {
-            setIsUpdating(true);
-            console.log(data);
+            setIsCreating(true);
+            const response = await create(data, token);
+            console.log(response);
+            if (response.success) {
+                toast.success(response.message);
+                navigate('/admin/users');
+                queryClient.invalidateQueries({ queryKey: ['users'] });
+            } else {
+                toast.error(response.message);
+            }
         } catch (error) {
             console.log(error);
             toast.error(error.message);
         } finally {
-            setIsUpdating(false);
+            setIsCreating(false);
         }
     }
 
-    const handleFileChange = (e, fieldName) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setValue(fieldName, e.target.result);
-                if (fieldName === 'img') {
-                    setPreviewImg(e.target.result);
-                } else if (fieldName === 'img_bg') {
-                    setPreviewImgBg(e.target.result);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const handleRoleChange = (e, roleId) => {
         const roles = watch('roles');
@@ -80,6 +72,7 @@ const Edit = () => {
         } else {
             setValue('roles', [...roles, roleId]);
         }
+        console.log(roles);
     }   
 
     if(isLoading) return <Loading />
@@ -190,16 +183,26 @@ const Edit = () => {
 
                     {/* img */}
                     <div className="col-md-6 mb-4">
-                        <label htmlFor="img" className="form-label">Image</label>
-                        <input type="file" className="form-control" {...register('img')} onChange={(e) => handleFileChange(e, 'img')} />
-                        {previewImg && <img src={previewImg} alt="preview" className='img-fluid mt-2 rounded w-100' />}
+                        <FileInput 
+                            label='Image' 
+                            name='img' 
+                            register={register} 
+                            setValue={setValue} 
+                            errors={errors} 
+                            defaultImage={null} 
+                        />
                     </div>
 
                     {/* img_bg */}
                     <div className="col-md-6 mb-4">
-                        <label htmlFor="img_bg" className="form-label">Image Background</label>
-                        <input type="file" className="form-control" {...register('img_bg')} onChange={(e) => handleFileChange(e, 'img_bg')} />
-                        {previewImgBg && <img src={previewImgBg} alt="preview" className='img-fluid mt-2 rounded w-100' />}
+                        <FileInput 
+                            label='Image Background' 
+                            name='img_bg' 
+                            register={register} 
+                            setValue={setValue} 
+                            errors={errors} 
+                            defaultImage={null} 
+                        />
                     </div>
 
                     {/* bio */}
@@ -210,7 +213,7 @@ const Edit = () => {
 
                 </div>
 
-                <button type="submit" disabled={isUpdating} className="btn btn-primary mt-3">{ isUpdating ? 'Updating...' : 'Update' }</button>
+                <button type="submit" disabled={isCreating} className="btn btn-primary mt-3">{ isCreating ? 'Creating...' : 'Create' }</button>
             </form>
         </div>
     )
