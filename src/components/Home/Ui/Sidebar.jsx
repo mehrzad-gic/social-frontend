@@ -72,7 +72,7 @@ const Sidebar = () => {
             {/* Profile Card */}
             <div className="card overflow-hidden">
               <div
-                className="h-50px"
+                className="h-100px"
                 style={{
                   backgroundImage: `url(${userImgBg.secure_url ? userImgBg.secure_url : ''})`,
                   backgroundPosition: "center",

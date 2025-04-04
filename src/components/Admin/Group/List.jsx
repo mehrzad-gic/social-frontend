@@ -11,7 +11,7 @@ const List = () => {
 
     const { data, isLoading, isError } = useQuery({
         queryKey: ['groups'],
-        queryFn: () => all(JSON.parse(localStorage.getItem('user'))?.jwt)
+        queryFn: () => all(JSON.parse(localStorage.getItem('user')).jwt)
     });
     const [isChangingStatus, setIsChangingStatus] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
