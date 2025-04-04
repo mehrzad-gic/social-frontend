@@ -19,7 +19,7 @@ const Edit = () => {
         queryKey: ['group', slug],
         queryFn: () => show(slug, token)
     });
-    
+    console.log(data);
     const queryClient = useQueryClient();
     const {register, handleSubmit, setValue, formState: {errors}} = useForm();
     const [isUpdating, setIsUpdating] = useState(false);
@@ -34,7 +34,6 @@ const Edit = () => {
                 queryClient.invalidateQueries({queryKey: ['groups']});
                 queryClient.invalidateQueries({queryKey: ['group', slug]});
                 navigate('/admin/content/groups');
-                toast.success(response.message);
             } else {
                 toast.error(response.message);
             }
@@ -80,18 +79,18 @@ const Edit = () => {
                         {errors.status && <span className="text-danger">{errors.status.message}</span>}
                     </div>
 
-                    <div className='mt-4 col-md-4'>
+                    <div className='mt-4 col-md-6'>
                         <FileInput
                             name='img'
                             label='Image'
                             register={register}
                             setValue={setValue}
-                            defaultValue={data?.group?.img}
+                            defaultImage={JSON.parse(data?.group?.img)[0].url}
                             errors={errors}
                         />
                     </div>
 
-                    <div className='mt-4 col-md-4'>
+                    <div className='mt-4 col-md-6'>
                         <label htmlFor="type" className="form-label">Type</label>
                         <select defaultValue={data?.group?.type} name='type' id='type' className='form-control' {...register('type', {required: 'Type is required', valueAsNumber: true})}>
                             <option selected={data?.group?.type == 1} value={1}>Public</option>

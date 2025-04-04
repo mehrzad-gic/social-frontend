@@ -13,6 +13,7 @@ const List = () => {
         queryKey: ['groups'],
         queryFn: () => all(JSON.parse(localStorage.getItem('user')).jwt)
     });
+    console.log(data);
     const [isChangingStatus, setIsChangingStatus] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -76,7 +77,7 @@ const List = () => {
                         <th>id</th>
                         <th>Name</th>
                         <th>Slug</th>
-                        <th>Image</th>
+                        {/* <th>Image</th> */}
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Updated At</th>
@@ -89,7 +90,7 @@ const List = () => {
                             <td>{group.id || index + 1}</td>
                             <td>{group.name || 'N/A'}</td>
                             <td>{group.slug || 'N/A'}</td>
-                            <td>{group.img ? <img src={JSON.parse(group.img)[0].url} alt={group.name} className='img-fluid' style={{width: '130px', height: '100px'}} /> : 'N/A'}</td>
+                            {/* <td>{group.img ? <img src={JSON.parse(group.img)[0].url} alt={group.name} className='img-fluid' style={{width: '130px', height: '100px'}} /> : 'N/A'}</td> */}
                             <td onClick={() => handleChangeStatus(group.slug)} disabled={isChangingStatus} style={{cursor: 'pointer'}}>
                                 {group.status == 1 
                                 ? <span className="badge bg-success">Active</span>

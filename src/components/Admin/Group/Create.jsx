@@ -54,7 +54,7 @@ const Create = () => {
 
                     <div className="mb-4 col-md-4">
                         <label htmlFor="slug" className="form-label">Slug</label>
-                        <input type="text" name='slug' id='slug' className="form-control" {...register('slug', {required: 'Slug is required'})} />
+                        <input type="text" name='slug' id='slug' className="form-control" {...register('slug')} />
                         {errors.slug && <span className="text-danger">{errors.slug.message}</span>}
                     </div>
 
