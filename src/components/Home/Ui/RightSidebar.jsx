@@ -38,7 +38,7 @@ export default function RightSidebar() {
                         <Link className="h6 mb-0" to={`/groups/${group.slug}`}>
                           {group.name}
                         </Link>
-                        <p className='mb-0'>{group.des}</p>
+                        <p className='mb-0'>{group.des.length > 15 ? group.des.substring(0, 15) + "..." : group.des}</p>
                       </div>
                       <Link
                         className="btn btn-success-soft rounded-circle icon-md ms-auto"
@@ -47,7 +47,7 @@ export default function RightSidebar() {
                         <i className="fa-solid fa-plus"> </i>
                       </Link>
                     </div>
-                    <div className='d-inline-flex gap-3 mt-1'>
+                    <div className='d-inline-flex gap-3 mt-2'>
                       {group.type == 1 ? <p className='mb-0 text-success'><i className="fa-solid fa-users"></i> Public</p> : <p className='mb-0 text-danger'><i className="fa-solid fa-users"></i> Private</p>}
                       <p className="text-secondary mb-2"><i className="fa-solid fa-calendar-days"></i> {new Date(group.createdAt).toLocaleDateString()}</p>
                       <p className='mb-0 text-info'><i className="fa-solid fa-users"></i> {group.members}</p>
