@@ -66,6 +66,7 @@ import CreateGroup from "./components/Admin/Group/Create";
 import EditGroup from "./components/Admin/Group/Edit";
 import GroupPosts from "./components/Admin/Group/GroupPosts";
 import GroupMembers from "./components/Admin/Group/GroupMembers";
+import GroupListDashboard from "./components/Dashboard/Group/List";
 
 const queryClient = new QueryClient({
     defaultOptions:{
@@ -101,7 +102,9 @@ function App() {
             { path: "Communication", element: <Info /> },
             { path: "CloseAccount", element: <Info /> },
             { path: "Privacy", element: <Info /> },
+            { path: "groups", element: <GroupListDashboard /> },
             { path: "Notification", element: <Info /> },
+            { path: "Settings", element: <Info /> },
           ],
         },
       ],

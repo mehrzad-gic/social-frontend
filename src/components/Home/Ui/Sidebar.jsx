@@ -24,7 +24,7 @@ const Sidebar = () => {
     { path: '/connections', icon: personIcon, label: 'Connections' },
     { path: '/news', icon: newsIcon, label: 'Latest News' },
     { path: '/events', icon: eventsIcon, label: 'Events' },
-    { path: '/groups', icon: groupsIcon, label: 'Groups' },
+    { path: '/dashboard/groups', icon: groupsIcon, label: 'Groups' },
     { path: '/notifications', icon: notificationsIcon, label: 'Notifications' },
     { path: '/settings', icon: settingsIcon, label: 'Settings' }
   ];
