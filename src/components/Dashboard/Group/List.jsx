@@ -3,17 +3,27 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { all } from "../../../Controllers/GroupController";
 import Loading from "../../Home/Ui/Loading";
+import CreateModal from "./CreateModal";
 
 const GroupListDashboard = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["groups"],
     queryFn: () => all(JSON.parse(localStorage.getItem("user")).jwt),
+    staleTime: 0, // Consider data immediately stale to ensure refetching
+    refetchOnMount: true, // Refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   });
+
+  // Log when data changes for debugging
+  React.useEffect(() => {
+    console.log('Groups data updated:', data);
+  }, [data]);
 
   if (isLoading) return <Loading/>
 
   return (
     <>
+    <div className="card">
       {/* Card header START */}
       <div className="card-header border-0 pb-0">
         <div className="row g-2">
@@ -23,9 +33,13 @@ const GroupListDashboard = () => {
           </div>
           <div className="col-sm-6 col-lg-3 ms-lg-auto">
             {/* Button modal */}
-            <a className="btn btn-primary-soft ms-auto w-100" href="#" data-bs-toggle="modal" data-bs-target="#modalCreateGroup">
+            <button 
+              className="btn btn-primary-soft ms-auto w-100" 
+              data-bs-toggle="modal" 
+              data-bs-target="#modalCreateGroup"
+            >
               <i className="fa-solid fa-plus pe-1"></i> Create group
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -60,7 +74,7 @@ const GroupListDashboard = () => {
                     <div 
                       className="h-80px rounded-top" 
                       style={{
-                        backgroundImage: `url(${JSON.parse(group.img)[0].url})`,
+                        backgroundImage: `url(${group.img ? JSON.parse(group.img)[0]?.url || '' : ''})`,
                         backgroundPosition: "center",
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat"
@@ -73,7 +87,7 @@ const GroupListDashboard = () => {
                         <Link to={`/group/${group.id}`}>
                           <img 
                             className="avatar-img rounded-circle border border-white border-3 bg-white" 
-                            src={JSON.parse(group.img)[0].url} 
+                            src={group.img ? JSON.parse(group.img)[0]?.url || '' : ''} 
                             alt={group.name} 
                           />
                         </Link>
@@ -184,6 +198,8 @@ const GroupListDashboard = () => {
         </div>
       </div>
       {/* Card body END */}
+      <CreateModal />
+      </div>
     </>
   );
 };

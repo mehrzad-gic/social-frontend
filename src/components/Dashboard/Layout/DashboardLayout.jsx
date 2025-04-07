@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../Home/Ui/Sidebar";
 import { useEffect, useState } from "react";
 
@@ -6,9 +6,13 @@ import { useEffect, useState } from "react";
 const DashboardLayout = () => {
 
     const storage = JSON.parse(localStorage.getItem('user'));
-    const user = storage?.user;
-    const token = storage?.jwt;
+    const user = storage?.user || null;
+    const token = storage?.jwt || null;
+    const navigate = useNavigate();
 
+    if (!user || !token) navigate('/login')
+    console.log(user, token)
+        
     return(
         <>
         <main>

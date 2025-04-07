@@ -16,8 +16,8 @@ import placeholderImage from '../../../assets/images/avatar/placeholder.jpg';
 const Sidebar = () => {
 
   const user = JSON.parse(localStorage.getItem('user')).user;
-  const userImg = JSON.parse(user.img)[0];
-  const userImgBg = JSON.parse(user.img_bg)[0];
+  const userImg = JSON.parse(user.img)?.[0];
+  const userImgBg = JSON.parse(user.img_bg)?.[0];
 
   const navItems = [
     { path: '/feed', icon: homeIcon, label: 'Feed' },
@@ -74,7 +74,7 @@ const Sidebar = () => {
               <div
                 className="h-100px"
                 style={{
-                  backgroundImage: `url(${userImgBg.secure_url ? userImgBg.secure_url : ''})`,
+                  backgroundImage: `url(${userImgBg?.url ? userImgBg?.url : ''})`,
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
@@ -87,7 +87,7 @@ const Sidebar = () => {
                     <Link to="/profile">
                       <img
                         className="avatar-img rounded border border-white border-3"
-                        src={userImg.secure_url ? `${userImg.secure_url}` : placeholderImage}
+                        src={userImg?.url ? `${userImg?.url}` : placeholderImage}
                         alt={user.name || 'User avatar'}
                       />
                     </Link>

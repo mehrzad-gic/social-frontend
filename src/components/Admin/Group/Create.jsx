@@ -21,9 +21,9 @@ const Create = () => {
             const response = await create(data, token);
             if(response.success) {
                 toast.success(response.message);
+                // invalidate the query
                 queryClient.invalidateQueries({queryKey: ['groups']});
                 navigate('/admin/content/groups');
-                toast.success(response.message);
             } else {
                 toast.error(response.message);
             }
