@@ -8,21 +8,29 @@ const Show = () => {
 
     const { slug } = useParams();
     const jwt = JSON.parse(localStorage.getItem("user")).jwt;
-    
+
     // fetching data
     const { data, isLoading, isError } = useQuery({
         queryKey: ["post", slug],
-        queryFn: () => show(slug,jwt),
+        queryFn: () => show(slug, jwt),
     });
     const post = data?.post;
 
-    if (isLoading) return <Loading/>;
+    if (isLoading) return <Loading />;
     if (isError) return <p>Error: {isError.message}</p>;
-    
-    return(
+
+    return (
         <>
-            {/* show post detail */}
-            <Post value={post} />
+
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-10 mx-auto mt-5 mb-5">
+                        {/* show post detail */}
+                        <Post value={post} />
+                    </div>
+                </div>
+            </div>
+
         </>
     )
 
