@@ -24,7 +24,7 @@ const Show = () => {
 
             <div className="container">
                 <div className="row">
-                    <div className="col-lg-10 mx-auto mt-5 mb-5">
+                    <div className="col-lg-8 mx-auto mt-5 mb-5">
                         {/* show post detail */}
                         <Post value={post} />
                     </div>

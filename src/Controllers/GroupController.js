@@ -4,8 +4,8 @@ import { createFormData } from "../Helpers/FormData.js";
 
 
 // Get All Groups
-export const all = async (token) => {
-    return fetch(`${BACKEND_URL}/groups`, {
+export const all = async (token,page) => {
+    return fetch(`${BACKEND_URL}/groups?page=${page}`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
