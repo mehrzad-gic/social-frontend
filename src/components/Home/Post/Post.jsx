@@ -394,7 +394,7 @@ const Post = ({ value, setPosts }) => {
         ) : value.img ? (
           <img
             className="card-img"
-            src={JSON.parse(value.img).url} // Ensure value.img has a 'url' property
+            src={JSON.parse(value.img)[0].url} // Ensure value.img has a 'url' property
             alt="Post"
           />
         ) : (
